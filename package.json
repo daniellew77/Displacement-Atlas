@@ -1,0 +1,42 @@
+{
+  "name": "displacement-atlas",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "eslint .",
+    "preview": "vite preview",
+    "generate:coordinates": "node scripts/generateCoords.js"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-globe.gl": "^2.27.2",
+    "three": "^0.168.0",
+    "topojson-client": "^3.1.0",
+    "world-atlas": "^2.0.2"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.36.0",
+    "@tailwindcss/postcss": "^4.1.14",
+    "@types/d3-scale": "^4.0.9",
+    "@types/node": "^24.6.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@types/three": "^0.160.0",
+    "@types/topojson-client": "^3.1.5",
+    "@vitejs/plugin-react": "^4.2.0",
+    "autoprefixer": "^10.4.21",
+    "eslint": "^9.36.0",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.22",
+    "globals": "^16.4.0",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.0",
+    "typescript": "^5.2.0",
+    "typescript-eslint": "^8.45.0",
+    "vite": "^5.0.0"
+  }
+}
