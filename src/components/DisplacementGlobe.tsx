@@ -155,12 +155,27 @@ export default function DisplacementGlobe() {
   }, [state.exploreMode]);
 
   const handleToggleExplore = useCallback(() => {
-    setState(prev => ({
-      ...prev,
-      exploreMode: !prev.exploreMode,
-      selectedCountry: !prev.exploreMode ? prev.selectedCountry : null,
-      selectedCountryName: !prev.exploreMode ? prev.selectedCountryName : null,
-    }));
+    setState(prev => {
+      const newExploreMode = !prev.exploreMode;
+      
+      // Zoom in when entering explore mode, zoom out when exiting
+      if (globeRef.current) {
+        const currentPOV = globeRef.current.pointOfView();
+        const targetAltitude = newExploreMode ? 1.8 : 2.5;
+        globeRef.current.pointOfView({
+          lat: currentPOV.lat,
+          lng: currentPOV.lng,
+          altitude: targetAltitude
+        }, 800);
+      }
+      
+      return {
+        ...prev,
+        exploreMode: newExploreMode,
+        selectedCountry: newExploreMode ? prev.selectedCountry : null,
+        selectedCountryName: newExploreMode ? prev.selectedCountryName : null,
+      };
+    });
   }, []);
 
   const getArcColor = useCallback((d: any) => {
@@ -187,7 +202,6 @@ export default function DisplacementGlobe() {
     const name = f?.properties?.__name ?? 'Unknown';
     return createTooltip(`
       <div style="font-weight: bold; margin-bottom: 4px;">${name}</div>
-      <div style="color: rgb(74, 121, 240);">Click to focus</div>
     `);
   }, [state.exploreMode]);
 
@@ -228,9 +242,9 @@ export default function DisplacementGlobe() {
           onGlobeClick={handleGlobeClick}
           
           polygonsData={state.exploreMode ? state.polygons : []}
-          polygonCapColor={(f: any) => (f === state.hoveredPoly ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.02)')}
+          polygonCapColor={(f: any) => (f === state.hoveredPoly ? 'rgba(0, 188, 212, 0.4)' : 'rgba(255,255,255,0.02)')}
           polygonSideColor={() => 'rgba(0,0,0,0)'}
-          polygonStrokeColor={(f: any) => (f === state.hoveredPoly ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.35)')}
+          polygonStrokeColor={(f: any) => (f === state.hoveredPoly ? 'rgba(0, 188, 212, 0.9)' : 'rgba(255,255,255,0.35)')}
           polygonAltitude={(f: any) => (f === state.hoveredPoly ? 0.005 : 0.001)}
           polygonLabel={getPolygonLabel}
           onPolygonHover={handlePolygonHover}
@@ -263,8 +277,17 @@ export default function DisplacementGlobe() {
               paddingBottom: '24px',
               borderBottom: '1px solid rgba(0, 188, 212, 0.1)',
             }}>
+              <p style={{ 
+                fontSize: '13px', 
+                color: 'rgba(255, 255, 255, 0.7)', 
+                textAlign: 'center',
+                marginBottom: '12px',
+                lineHeight: '1.5'
+              }}>
+                Explore global migration across the years
+              </p>
               <div className="flex items-center justify-center gap-2">
-                <span style={{ fontSize: '14px', color: 'rgba(255, 255, 255, 0.6)' }}>Viewing Year:</span>
+                <span style={{ fontSize: '14px', color: 'rgba(255, 255, 255, 0.7)' }}>Viewing Year:</span>
                 <select
                   value={year}
                   onChange={(e) => setYear(Number(e.target.value))}
