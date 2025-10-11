@@ -2,6 +2,7 @@ import { useRef, useEffect, useState, useMemo, useCallback } from 'react';
 import Globe from 'react-globe.gl';
 import { useGlobalFlows } from '../hooks/useUNHCRData';
 import { usePolygons } from '../hooks/usePolygons';
+import { useIdpPoints } from '../hooks/useIdpPoints';
 import { FlowProcessor, getCoordinateMap } from '../lib';
 import { 
   polygonCentroid, 
@@ -9,8 +10,10 @@ import {
   getVolumeStyle, 
   createTooltip 
 } from '../utils/globe-helpers';
+import { createIdpTooltip, getIdpPointColor } from '../utils/idp-points';
 import { GLOBE_CONFIG } from '../config/globe.config';
 import type { ExtendedArc, GlobeState } from '../types/globe.types';
+import type { IdpPoint } from '../utils/idp-points';
 import CountryDashboard from './CountryDashboard';
 import LoadingScreen from './LoadingScreen';
 import ErrorScreen from './ErrorScreen';
@@ -45,6 +48,7 @@ export default function DisplacementGlobe() {
   const { flows, loading, error } = useGlobalFlows({ year });
   const coordinates = useMemo(() => getCoordinateMap(), []);
   const polygons = usePolygons();
+  const { points: idpPoints } = useIdpPoints(year, polygons);
   const [hasInitialData, setHasInitialData] = useState(false);
   
   useEffect(() => {
@@ -205,6 +209,10 @@ export default function DisplacementGlobe() {
     `);
   }, [state.exploreMode]);
 
+  const getIdpPointRadius = useCallback((point: any) => (point as IdpPoint).size, []);
+  const getIdpPointColorCallback = useCallback((point: any) => getIdpPointColor((point as IdpPoint).idpCount), []);
+  const getIdpPointLabel = useCallback((point: any) => createIdpTooltip(point as IdpPoint), []);
+
   if (loading && !hasInitialData) return <LoadingScreen year={year} />;
   if (error && !hasInitialData) return <ErrorScreen error={error} onRetry={() => window.location.reload()} />;
 
@@ -249,6 +257,15 @@ export default function DisplacementGlobe() {
           polygonLabel={getPolygonLabel}
           onPolygonHover={handlePolygonHover}
           onPolygonClick={handlePolygonClick}
+          
+          pointsData={idpPoints}
+          pointLat="lat"
+          pointLng="lng"
+          pointRadius={getIdpPointRadius}
+          pointColor={getIdpPointColorCallback}
+          pointLabel={getIdpPointLabel}
+          pointAltitude={0.01}
+          pointResolution={12}
         />
       </div>
 

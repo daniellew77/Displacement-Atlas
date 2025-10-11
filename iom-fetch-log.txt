@@ -1,0 +1,117 @@
+🌍 Starting IOM IDP data refresh...
+
+Found 53 countries in IOM database
+
+[1/53] Fetching Afghanistan... ⊘ (no data)
+[2/53] Fetching Antigua and Barbuda... ⊘ (no data)
+[3/53] Fetching Bahamas (the)... ⊘ (no data)
+[4/53] Fetching Benin... ⊘ (no data)
+[5/53] Fetching Bolivia (Plurinational State of)... ⊘ (no data)
+[6/53] Fetching Burkina Faso... ⊘ (no data)
+[7/53] Fetching Burundi... ⊘ (no data)
+[8/53] Fetching Cameroon... ⊘ (no data)
+[9/53] Fetching Central African Republic... ⊘ (no data)
+[10/53] Fetching Chad... ⊘ (no data)
+[11/53] Fetching Democratic Republic of the Congo... ✓ (2 records, 2 years)
+[12/53] Fetching Djibouti... ⊘ (no data)
+[13/53] Fetching Dominica... ⊘ (no data)
+[14/53] Fetching Ecuador... ⊘ (no data)
+[15/53] Fetching El Salvador... ⊘ (no data)
+[16/53] Fetching Ethiopia... ✓ (30 records, 8 years)
+[17/53] Fetching Fiji... ⊘ (no data)
+[18/53] Fetching Grenada... ⊘ (no data)
+[19/53] Fetching Guatemala... ⊘ (no data)
+[20/53] Fetching Haiti... ✓ (11 records, 4 years)
+[21/53] Fetching Honduras... ⊘ (no data)
+[22/53] Fetching Indonesia... ⊘ (no data)
+[23/53] Fetching Iraq... ⊘ (no data)
+[24/53] Fetching Kenya... ⊘ (no data)
+[25/53] Fetching Lao People's Democratic Republic... ⊘ (no data)
+[26/53] Fetching Lebanon... ⊘ (no data)
+[27/53] Fetching Libya... ⊘ (no data)
+[28/53] Fetching Madagascar... ⊘ (no data)
+[29/53] Fetching Malawi... ⊘ (no data)
+[30/53] Fetching Mali... ⊘ (no data)
+[31/53] Fetching Mongolia... ⊘ (no data)
+[32/53] Fetching Mozambique... ⊘ (no data)
+[33/53] Fetching Nepal... ⊘ (no data)
+[34/53] Fetching Niger... ⊘ (no data)
+[35/53] Fetching Nigeria... ⊘ (no data)
+[36/53] Fetching Pakistan... ⊘ (no data)
+[37/53] Fetching Papua New Guinea... ⊘ (no data)
+[38/53] Fetching Peru... ⊘ (no data)
+[39/53] Fetching Philippines (the)... ⊘ (no data)
+[40/53] Fetching Republic of Armenia... ⊘ (no data)
+[41/53] Fetching Saint Vincent and the Grenadines... ⊘ (no data)
+[42/53] Fetching Somalia... ⊘ (no data)
+[43/53] Fetching South Africa... ⊘ (no data)
+[44/53] Fetching South Sudan... ⊘ (no data)
+[45/53] Fetching Sri Lanka... ⊘ (no data)
+[46/53] Fetching Sudan... ⊘ (no data)
+[47/53] Fetching Syrian Arab Republic... ⊘ (no data)
+[48/53] Fetching Uganda... ⊘ (no data)
+[49/53] Fetching Ukraine... ⊘ (no data)
+[50/53] Fetching Vanuatu... ⊘ (no data)
+[51/53] Fetching Yemen... ⊘ (no data)
+[52/53] Fetching Zambia... ⊘ (no data)
+[53/53] Fetching Zimbabwe... ⊘ (no data)
+
+✓ Successfully fetched IDP data for 3 countries
+
+Data structure preview:
+{
+  "COD": {
+    "countryName": "Democratic Republic of the Congo",
+    "iso3": "COD",
+    "yearlyData": [
+      {
+        "year": 2024,
+        "totalIdps": 6917478,
+        "dataPoints": 1,
+        "minIdps": 6917478,
+        "maxIdps": 6917478,
+        "latestReportDate": "2024-11-30T00:00:00"
+      },
+      {
+        "year": 2023,
+        "totalIdps": 6947295,
+        "dataPoints": 1,
+        "minIdps": 6947295,
+        "maxIdps": 6947295,
+        "latestReportDate": "2023-09-30T00:00:00"
+      }
+    ],
+    "lastUpdated": "2025-10-10T17:27:03.278Z",
+    "hasData": true
+  },
+  "ETH": {
+    "countryName": "Ethiopia",
+    "iso3": "ETH",
+    "yearlyData": [
+      {
+        "year": 2024,
+        "totalIdps": 1919993,
+        "dataPoints": 2,
+        "minIdps": 1919993,
+        "maxIdps": 3306693,
+        "latestReportDate": "2024-08-31T00:00:00"
+      },
+      {
+        "year": 2023,
+        "totalIdps": 3194413,
+        "dataPoints": 3,
+        "minIdps": 3194413,
+        "maxIdps": 43...
+
+✓ Data saved to ./src/data/iom-idp-data.json
+
+📊 Summary:
+   Countries with IDP data: 3
+   Most years of data: Ethiopia (8 years)
+
+🇪🇹 Ethiopia sample data:
+   Years available: 8
+   Latest year: 2024
+   Latest IDP count: 1,919,993
+
+✅ IOM data refresh complete!

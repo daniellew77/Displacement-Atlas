@@ -1,0 +1,142 @@
+🌍 Fetching ALL IOM IDP Data (All Operations)
+
+============================================
+
+📋 Fetching list of all countries from IOM API...
+
+✓ Found 53 countries in IOM database
+
+Fetching ALL operations (not just Countrywide monitoring)...
+
+[ 1/53] Afghanistan                             ... ✓ AFG:  6,557,855 IDPs (2022) - 6 years
+[ 2/53] Antigua and Barbuda                     ... ✓ ATG:        263 IDPs (2017) - 1 years
+[ 3/53] Bahamas (the)                           ... ✓ BHS:      5,704 IDPs (2019) - 1 years
+[ 4/53] Benin                                   ... ✓ BEN:     27,294 IDPs (2025) - 2 years
+[ 5/53] Bolivia (Plurinational State of)        ... ✓ BOL:        553 IDPs (2018) - 1 years
+[ 6/53] Burkina Faso                            ... ✓ BFA:     10,293 IDPs (2019) - 2 years
+[ 7/53] Burundi                                 ... ✓ BDI:     92,227 IDPs (2024) - 10 years
+[ 8/53] Cameroon                                ... ✓ CMR:    510,855 IDPs (2025) - 11 years
+[ 9/53] Central African Republic                ... ✓ CAF:    422,616 IDPs (2025) - 8 years
+[10/53] Chad                                    ... ✓ TCD:    225,689 IDPs (2025) - 9 years
+[11/53] Democratic Republic of the Congo        ... ✓ COD:  1,011,335 IDPs (2025) - 10 years
+[12/53] Djibouti                                ... ✓ DJI:      6,086 IDPs (2022) - 1 years
+[13/53] Dominica                                ... ✓ DMA:        352 IDPs (2018) - 2 years
+[14/53] Ecuador                                 ... ✓ ECU:        773 IDPs (2017) - 2 years
+[15/53] El Salvador                             ... ✓ SLV:      4,752 IDPs (2020) - 1 years
+[16/53] Ethiopia                                ... ✓ ETH:  1,919,993 IDPs (2024) - 8 years
+[17/53] Fiji                                    ... ✓ FJI:     33,401 IDPs (2016) - 1 years
+[18/53] Grenada                                 ... ✓ GRD:        338 IDPs (2024) - 1 years
+[19/53] Guatemala                               ... ✓ GTM:     13,157 IDPs (2020) - 2 years
+[20/53] Haiti                                   ... ✓ HTI:  1,287,593 IDPs (2025) - 15 years
+[21/53] Honduras                                ... ✓ HND:     25,465 IDPs (2020) - 1 years
+[22/53] Indonesia                               ... ✓ IDN:    110,373 IDPs (2018) - 3 years
+[23/53] Iraq                                    ... ✓ IRQ:  1,031,475 IDPs (2024) - 11 years
+[24/53] Kenya                                   ... ✓ KEN:     45,513 IDPs (2024) - 4 years
+[25/53] Lao People's Democratic Republic        ... ✓ LAO:      4,270 IDPs (2018) - 1 years
+[26/53] Lebanon                                 ... ✓ LBN:     82,632 IDPs (2025) - 3 years
+[27/53] Libya                                   ... ✓ LBY:    147,382 IDPs (2024) - 8 years
+[28/53] Madagascar                              ... ✓ MDG:     90,219 IDPs (2022) - 3 years
+[29/53] Malawi                                  ... ✓ MWI:    139,312 IDPs (2024) - 4 years
+[30/53] Mali                                    ... ✓ MLI:    375,539 IDPs (2023) - 10 years
+[31/53] Mongolia                                ... ✓ MNG:        755 IDPs (2018) - 1 years
+[32/53] Mozambique                              ... ✓ MOZ:    609,243 IDPs (2025) - 7 years
+[33/53] Nepal                                   ... ✓ NPL:     13,352 IDPs (2020) - 4 years
+[34/53] Niger                                   ... ✓ NER:    249,194 IDPs (2024) - 3 years
+[35/53] Nigeria                                 ... ✓ NGA:  2,252,348 IDPs (2024) - 11 years
+[36/53] Pakistan                                ... ✓ PAK:  1,591,367 IDPs (2022) - 3 years
+[37/53] Papua New Guinea                        ... ✓ PNG:      8,041 IDPs (2019) - 3 years
+[38/53] Peru                                    ... ✓ PER:     13,357 IDPs (2017) - 1 years
+[39/53] Philippines (the)                       ... ✓ PHL:     63,037 IDPs (2021) - 4 years
+[40/53] Republic of Armenia                     ... ✓ ARM:     89,149 IDPs (2020) - 1 years
+[41/53] Saint Vincent and the Grenadines        ... ✓ VCT:        199 IDPs (2024) - 1 years
+[42/53] Somalia                                 ... ✓ SOM:  3,262,080 IDPs (2024) - 5 years
+[43/53] South Africa                            ... ✓ ZAF:     21,448 IDPs (2022) - 1 years
+[44/53] South Sudan                             ... ✓ SSD:  1,992,513 IDPs (2025) - 12 years
+[45/53] Sri Lanka                               ... ✓ LKA:     10,020 IDPs (2017) - 1 years
+[46/53] Sudan                                   ... ✓ SDN:  9,819,680 IDPs (2025) - 16 years
+[47/53] Syrian Arab Republic                    ... ✓ SYR:    158,023 IDPs (2025) - 1 years
+[48/53] Uganda                                  ... ✓ UGA:      1,611 IDPs (2025) - 4 years
+[49/53] Ukraine                                 ... ✓ UKR:  3,329,803 IDPs (2025) - 4 years
+[50/53] Vanuatu                                 ... ✓ VUT:      6,218 IDPs (2020) - 5 years
+[51/53] Yemen                                   ... ✓ YEM:  2,791,603 IDPs (2023) - 6 years
+[52/53] Zambia                                  ... ✓ ZMB:    140,261 IDPs (2024) - 1 years
+[53/53] Zimbabwe                                ... ✓ ZWE:     45,799 IDPs (2024) - 5 years
+
+============================================
+✅ Successfully fetched IDP data for 53 countries
+📊 Total data points: 1322
+📅 Years covered: 2010 - 2025
+============================================
+
+💾 Data saved to:
+   - ./src/data/iom-idp-data.json
+   - ./public/iom-cache.json
+
+📊 Countries with IDP Data:
+============================
+
+ISO  Country Name                          Latest IDPs    Year  Operation
+--------------------------------------------------------------------------------
+SDN  Sudan                                     9,819,680   2025  Armed Clashes in Sudan (Overvi
+AFG  Afghanistan                               6,557,855   2022  Returns and displacement in Af
+UKR  Ukraine                                   3,329,803   2025  Displacement due to Conflict i
+SOM  Somalia                                   3,262,080   2024  Somalia - Countrywide Monitori
+YEM  Yemen                                     2,791,603   2023  Yemen conflict
+NGA  Nigeria                                   2,252,348   2024  Lake Chad Basin Crisis
+SSD  South Sudan                               1,992,513   2025  Mobility Tracking
+ETH  Ethiopia                                  1,919,993   2024  Countrywide
+PAK  Pakistan                                  1,591,367   2022  Pakistan floods (2022)
+HTI  Haiti                                     1,287,593   2025  Countrywide
+IRQ  Iraq                                      1,031,475   2024  Iraq conflict
+COD  Democratic Republic of the Congo          1,011,335   2025  Nord Kivu
+MOZ  Mozambique                                  609,243   2025  Cabo Delgado Conflict
+CMR  Cameroon                                    510,855   2025  Lake Chad Basin Crisis
+CAF  Central African Republic                    422,616   2025  Central African Republic confl
+MLI  Mali                                        375,539   2023  Mali Conflict
+NER  Niger                                       249,194   2024  Displacement in Tahoua and Til
+TCD  Chad                                        225,689   2025  Lake Chad Basin Crisis
+SYR  Syrian Arab Republic                        158,023   2025  As-Sweida Conflict
+LBY  Libya                                       147,382   2024  Libya Crisis
+ZMB  Zambia                                      140,261   2024  Drought Response in Southern A
+MWI  Malawi                                      139,312   2024  Drought Response in Southern A
+IDN  Indonesia                                   110,373   2018  Central Sulawesi Earthquake
+BDI  Burundi                                      92,227   2024  Burundi Complex Emergency
+MDG  Madagascar                                   90,219   2022  Drought in Grand Sud
+ARM  Republic of Armenia                          89,149   2020  Arrivals in Armenia
+LBN  Lebanon                                      82,632   2025  Displacement due to conflict
+PHL  Philippines (the)                            63,037   2021  Maguindanao Displacement
+ZWE  Zimbabwe                                     45,799   2024  Drought Response in Southern A
+KEN  Kenya                                        45,513   2024  Mobility Monitoring in Mandera
+FJI  Fiji                                         33,401   2016  Tropical Cyclone Winston
+BEN  Benin                                        27,294   2025  Sahel Crisis
+HND  Honduras                                     25,465   2020  Hurricane ETA and IOTA respons
+ZAF  South Africa                                 21,448   2022  KwaZulu-Natal Floods 2022
+PER  Peru                                         13,357   2017  El Nino Costero
+NPL  Nepal                                        13,352   2020  Floods in Nepal (2020)
+GTM  Guatemala                                    13,157   2020  Hurricane ETA and IOTA respons
+BFA  Burkina Faso                                 10,293   2019  Burkina Faso Crisis
+LKA  Sri Lanka                                    10,020   2017  Sri Lanka Floods (2017)
+PNG  Papua New Guinea                              8,041   2019  Volcano
+VUT  Vanuatu                                       6,218   2020  Tropical Cyclone Harold Respon
+DJI  Djibouti                                      6,086   2022  Drought Impact
+BHS  Bahamas (the)                                 5,704   2019  Bahamas (the) - Hurricane Dori
+SLV  El Salvador                                   4,752   2020  Storms Amanda and Cristobal Re
+LAO  Lao People's Democratic Republic              4,270   2018  Flash Floods in Attapeu
+UGA  Uganda                                        1,611   2025  Disaster Risk Reduction (DRR)
+ECU  Ecuador                                         773   2017  Ecuador Earthquake
+MNG  Mongolia                                        755   2018  Mongolia countrywide monitorin
+BOL  Bolivia (Plurinational State of)                553   2018  Floods(2018)
+DMA  Dominica                                        352   2018  Hurricane Season in the Caribb
+GRD  Grenada                                         338   2024  Hurricane Beryl
+ATG  Antigua and Barbuda                             263   2017  Hurricane Season in the Caribb
+VCT  Saint Vincent and the Grenadines                199   2024  Hurricane Beryl
+
+✅ Total countries with data: 53
+
+💡 To load this data in your browser:
+   1. Start your dev server: npm run dev
+   2. Open browser console (F12)
+   3. Run: window.loadIOMCache()
+   4. Refresh the page
+   5. Change years to see different countries!
+

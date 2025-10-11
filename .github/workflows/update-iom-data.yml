@@ -1,0 +1,60 @@
+name: Update IOM IDP Data
+
+on:
+  schedule:
+    - cron: '0 2 1 * *'
+  
+  workflow_dispatch:
+
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Fetch latest IOM data
+        run: node scripts/fetchIOMData.js
+      
+      - name: Check for changes
+        id: check_changes
+        run: |
+          git diff --quiet public/iom-cache.json || echo "changed=true" >> $GITHUB_OUTPUT
+      
+      - name: Commit and push if changed
+        if: steps.check_changes.outputs.changed == 'true'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add public/iom-cache.json src/data/iom-idp-data.json
+          git commit -m "chore: update IOM IDP data - $(date +'%B %Y')"
+          git push
+      
+      - name: Create summary
+        if: steps.check_changes.outputs.changed == 'true'
+        run: |
+          echo "## 🔄 IOM Data Updated Successfully" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Updated IOM IDP data for $(date +'%B %Y')" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "The latest displacement data has been fetched from IOM DTM API and committed to the repository." >> $GITHUB_STEP_SUMMARY
+      
+      - name: No changes summary
+        if: steps.check_changes.outputs.changed != 'true'
+        run: |
+          echo "## ℹ️ No Changes Detected" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "IOM data is already up to date. No changes were committed." >> $GITHUB_STEP_SUMMARY
+

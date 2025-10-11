@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useIncomingFlows, useOutgoingFlows } from '../hooks/useUNHCRData';
+import { loadIOMCache } from '../utils/iom-processor';
 
 type Props = {
   iso3: string;
@@ -39,6 +40,18 @@ export default function CountryDashboard({ iso3, year: initialYear, onClose, asy
   const incomingData = useIncomingFlows(iso3, selectedYear);
   const outgoingData = useOutgoingFlows(iso3, selectedYear);
   const { flows, loading, error } = direction === 'incoming' ? incomingData : outgoingData;
+
+  // Load IDP data for this country and year
+  const idpData = useMemo(() => {
+    const cache = loadIOMCache();
+    if (!cache) return null;
+    
+    const countryData = cache.idpData.get(iso3);
+    if (!countryData) return null;
+    
+    const yearData = countryData.yearlyData.find(yd => yd.year === selectedYear);
+    return yearData || null;
+  }, [iso3, selectedYear]);
 
   const {
     totalAsylumSeekers,
@@ -159,7 +172,26 @@ export default function CountryDashboard({ iso3, year: initialYear, onClose, asy
                   title={direction === 'incoming' ? 'Refugees' : 'Refugees Abroad'}
                   value={totalRefugees}
                 />
+                {idpData && (
+                  <div className="dashboard-stat-card-full">
+                    <div className="dashboard-stat-title">
+                      Internally Displaced
+                    </div>
+                    <div className="dashboard-stat-value">
+                      {idpData.totalIdps.toLocaleString()}
+                    </div>
+                  </div>
+                )}
               </div>
+              
+              {idpData && (
+                <div className="dashboard-data-note" style={{ marginTop: '12px' }}>
+                  <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2} style={{ flexShrink: 0 }}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span>IDP data from IOM DTM: {idpData.operation}</span>
+                </div>
+              )}
 
               {iso3 === 'PSE' && (
                 <div className="dashboard-data-note">

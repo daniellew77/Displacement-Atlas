@@ -39,4 +39,4 @@ export {
   fetchAndProcessGlobalData,
   fetchCountryData,
   runExamples,
-} from './example-usage';
+} from './fetchprocess';

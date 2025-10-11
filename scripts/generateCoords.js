@@ -68,7 +68,6 @@ const SPECIAL_CODES = {
 };
 
 async function generateCountryCoordinates() {
-  console.log('🌍 Fetching country data from REST Countries API...\n');
   
   try {
     const response = await fetch(
@@ -80,7 +79,6 @@ async function generateCountryCoordinates() {
     }
     
     const data = await response.json();
-    console.log(`✅ Received ${data.length} countries from API\n`);
     
     // Transform to our format
     const coordinates = data.map(country => {
@@ -123,7 +121,7 @@ async function generateCountryCoordinates() {
     return coordinates;
     
   } catch (error) {
-    console.error('❌ Error fetching country data:', error);
+    console.error('Error fetching country data:', error);
     throw error;
   }
 }

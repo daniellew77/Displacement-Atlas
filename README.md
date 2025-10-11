@@ -8,7 +8,7 @@ This project was inspired by the New York Times' incredible article "[To Underst
 
 The goal of this is to make the concept of migration, which we know largely anecdotally, visible on a global scale, so people can understand how migration ebbs and flows and what its current state is.  
 
-## The Data Story
+## Data Sources
 
 ### UNHCR Population Data
 
@@ -19,6 +19,17 @@ The backbone of this visualization is the [UNHCR Population Statistics Database]
 - **Origins and Destinations**: Where people flee from (country of origin) and where they seek safety (country of asylum)
 
 The UNHCR API provides data from 1951 to present, covering virtually every country and territory. This project currently visualizes data from 2000-2024, showing how displacement patterns have evolved over two decades of conflict, climate change, and political upheaval.
+
+### IOM Displacement Tracking 
+
+Internal displacement data from the [International Organization for Migration (IOM)](https://dtmapi.iom.int/) provides tracking of people displaced within their own countries:
+
+- **53 Countries**: Coverage of major displacement crises worldwide
+- **Multiple Operation Types**: Countrywide monitoring, conflict responses, disaster tracking
+- **1,300+ Data Points**: Regular updates from field operations
+- **Automatic Monthly Updates**: GitHub Actions automatically refreshes data on the 1st of each month
+
+This data complements UNHCR's cross-border refugee data by showing the full scope of both internal and external displacement.
 
 ### Palestine: UNRWA Data
 
@@ -79,7 +90,7 @@ Coordinates use capital cities as representative points, with manual overrides f
 
 ### Two Modes of Exploration
 
-**Flow View (Default)**
+**Global View (Default)**
 - Shows top 100 global displacement routes
 - Year selector to explore data from 2000-2024
 - Hover to see specific route details
@@ -119,6 +130,20 @@ React Hooks
 - `useUNHCRData.ts` - Custom hooks for fetching and merging displacement data
 - `usePolygons.ts` - Loads and processes country boundary polygons for interactive features
 
+### IOM DTM Architecture
+
+The IDP feature uses a monthly automated refresh system to keep displacement data current without impacting users or API servers.
+
+**How It Works:**
+
+1. **Monthly Data Refresh** - GitHub Actions automatically queries the IOM API on the 1st of each month, fetching data for all 53 countries and committing the updated cache to the repository.
+
+2. **Static File Deployment** - The 500KB `iom-cache.json` file deploys with the app (Vercel), ensuring all users receive identical, up-to-date data.
+
+3. **Client-Side Caching** - On first visit, the app automatically loads the cache into localStorage for instant access. Red circles appear on the globe for countries with IDP data for the selected year.
+
+4. **Data Prioritization** - When available, the system prioritizes official "Countrywide monitoring" data. For countries without nationwide statistics, it falls back to regional or crisis-specific operations (displayed in tooltips for transparency).
+
 ## Data Accuracy & Limitations
 
 ### What This Shows
@@ -130,10 +155,10 @@ React Hooks
 
 ### What's Missing
 
-- **Internally Displaced Persons (IDPs)**: People displaced within their own country (not shown as flows)
 - **Undocumented movements**: People who flee without formal registration
 - **Seasonal migration**: Short-term movements and circular migration patterns
 - **Real-time data**: Most recent year may be preliminary, subject to updates
+- **IDP Flow Visualization**: IDPs are shown as static circles, not directional flows (internal movement patterns not tracked by IOM)
 
 ### Open Source Libraries
 

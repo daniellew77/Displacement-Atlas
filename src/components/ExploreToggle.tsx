@@ -35,7 +35,7 @@ export default function ExploreToggle({
               if (exploreMode) e.currentTarget.style.backgroundColor = 'transparent';
             }}
           >
-            Flow View
+            Global View
           </button>
           <button
             onClick={() => !exploreMode && onToggle()}

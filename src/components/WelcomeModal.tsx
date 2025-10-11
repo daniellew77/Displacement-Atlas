@@ -19,21 +19,21 @@ export default function WelcomeModal({ onClose }: { onClose: () => void }) {
               <div>
                 <h3 className="welcome-modal-feature-title">Navigate the Globe</h3>
                 <p className="welcome-modal-feature-text">
-                  Drag to rotate, scroll to zoom, and hover over migration arcs to see detailed flow information
+                  Drag to rotate, scroll to zoom. Hover over migration arcs and dots to see detailed information.
                 </p>
               </div>
 
               <div>
                 <h3 className="welcome-modal-feature-title">Compare Time Periods</h3>
                 <p className="welcome-modal-feature-text">
-                  In Flow View (top left), compare migration patterns across multiple years to understand how global displacement has evolved
+                  In Global View (top left), compare migration patterns and IDP data across multiple years to understand how global displacement has evolved.
                 </p>
               </div>
 
               <div>
                 <h3 className="welcome-modal-feature-title">Discover Country Details</h3>
                 <p className="welcome-modal-feature-text">
-                  Toggle Explore Mode to click on countries and view immigration/emigration breakdowns
+                  Toggle Explore Mode to click on countries and view immigration/emigration breakdowns and IDP data.
                 </p>
               </div>
             </div>
