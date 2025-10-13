@@ -2,7 +2,7 @@
  * React hook for generating IDP points for globe visualization
  */
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { loadIOMCache } from '../utils/iom-processor';
 import { generateIdpPoints } from '../utils/idp-points';
 import type { IdpPoint } from '../utils/idp-points';
