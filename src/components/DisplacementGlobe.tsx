@@ -213,7 +213,7 @@ export default function DisplacementGlobe() {
   const getIdpPointColorCallback = useCallback((point: any) => getIdpPointColor((point as IdpPoint).idpCount), []);
   const getIdpPointLabel = useCallback((point: any) => createIdpTooltip(point as IdpPoint), []);
 
-  if (loading && !hasInitialData) return <LoadingScreen year={year} />;
+  if (loading && !hasInitialData) return <LoadingScreen />;
   if (error && !hasInitialData) return <ErrorScreen error={error} onRetry={() => window.location.reload()} />;
 
   return (

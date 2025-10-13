@@ -23,11 +23,10 @@ export function useGlobalFlows(options: UseUNHCRDataOptions) {
     error: null,
   });
 
-  const api = new UNHCRApiService();
-  const unrwaApi = new UNRWAApiService();
-
   const fetchFlows = useCallback(async () => {
     setState(prev => ({ ...prev, loading: true, error: null }));
+    const api = new UNHCRApiService();
+    const unrwaApi = new UNRWAApiService();
     
     try {
       const unhcrFlows = await api.fetchGlobalFlows(year);
@@ -103,9 +102,6 @@ export function useOutgoingFlows(
     error: null,
   });
 
-  const api = new UNHCRApiService();
-  const unrwaApi = new UNRWAApiService();
-
   const fetchFlows = useCallback(async () => {
     if (!originCountryIso) {
       setState({ flows: [], loading: false, error: null });
@@ -113,6 +109,8 @@ export function useOutgoingFlows(
     }
 
     setState(prev => ({ ...prev, loading: true, error: null }));
+    const api = new UNHCRApiService();
+    const unrwaApi = new UNRWAApiService();
     
     try {
       const unhcrFlows = await api.fetchOutgoingFlows(originCountryIso, year);

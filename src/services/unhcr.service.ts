@@ -16,7 +16,7 @@ export class UNHCRApiService {
     }
 
     const allItems: UNHCRPopulationItem[] = [];
-    let currentPage = 1;
+    const currentPage = 1;
     let maxPages = 1;
 
     try {
@@ -61,15 +61,11 @@ export class UNHCRApiService {
       limit: 1000,
     });
 
-    try {
-      const response = await fetch(url);
-      const data: UNHCRApiResponse = await response.json();
-      const flows = this.transformToFlows(data.items);
-      this.cache.set(cacheKey, flows);
-      return flows;
-    } catch (error) {
-      throw error;
-    }
+    const response = await fetch(url);
+    const data: UNHCRApiResponse = await response.json();
+    const flows = this.transformToFlows(data.items);
+    this.cache.set(cacheKey, flows);
+    return flows;
   }
 
   async fetchOutgoingFlows(
@@ -90,15 +86,11 @@ export class UNHCRApiService {
       limit: 1000,
     });
 
-    try {
-      const response = await fetch(url);
-      const data: UNHCRApiResponse = await response.json();
-      const flows = this.transformToFlows(data.items);
-      this.cache.set(cacheKey, flows);
-      return flows;
-    } catch (error) {
-      throw error;
-    }
+    const response = await fetch(url);
+    const data: UNHCRApiResponse = await response.json();
+    const flows = this.transformToFlows(data.items);
+    this.cache.set(cacheKey, flows);
+    return flows;
   }
 
   private async fetchPage(year: number, page: number): Promise<UNHCRApiResponse> {

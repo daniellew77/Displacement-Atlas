@@ -1,0 +1,37 @@
+name: Update UNHCR & UNRWA Data
+
+on:
+  workflow_dispatch: # Allows manual triggering
+  schedule:
+    - cron: '0 3 25 1 *' 
+
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Required for git history
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Fetch and update UNHCR & UNRWA data
+        run: node scripts/fetchUNHCRUNRWAData.js
+
+      - name: Commit and push if changes
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "actions@github.com"
+          git add public/unhcr-cache.json public/unrwa-cache.json src/data/unhcr-data.json src/data/unrwa-data.json
+          git diff --quiet --exit-code || (git commit -m "🔄 chore(data): Auto-update UNHCR & UNRWA data - $(date +'%Y')" && git push)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+

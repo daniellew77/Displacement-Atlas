@@ -1,10 +1,8 @@
 # Global Displacement Atlas
 
-An interactive 3D visualization mapping forced displacement and refugee flows across the world.
-
 ## Inspiration!
 
-This project was inspired by the New York Times' incredible article "[To Understand Global Migration, You Have to See It First](https://www.nytimes.com/interactive/2025/04/17/opinion/global-migration-facebook-data.html)" which demonstrated the power of visualizing human movement at a global scale. While that piece focused on all forms of migration using data from Meta (2022), this atlas specifically illuminates forced displacement—refugees and asylum seekers—using official data from the United Nations High Commissioner for Refugees (UNHCR) and the United Nations Relief and Works Agency (UNRWA).
+This project was inspired by the New York Times' incredible article "[To Understand Global Migration, You Have to See It First](https://www.nytimes.com/interactive/2025/04/17/opinion/global-migration-facebook-data.html)" which demonstrated the power of visualizing human migration at a global scale. While that piece focused on all forms of migration using data from Meta (2022), this atlas specifically illuminates forced displacement—refugees, internally displaced peoples, and asylum seekers—using official data from the United Nations High Commissioner for Refugees (UNHCR), the International Organization for Migration (IOM), and the United Nations Relief and Works Agency (UNRWA).
 
 The goal of this is to make the concept of migration, which we know largely anecdotally, visible on a global scale, so people can understand how migration ebbs and flows and what its current state is.  
 
@@ -63,6 +61,7 @@ The atlas is built as a single-page React application using modern web technolog
 
 ### Data Processing Pipeline
 
+**UNHCR/UNRWA (Refugee & Asylum Flows)**
 1. **Fetching**: Services call UNHCR and UNRWA APIs with appropriate filters (country, year, ISO codes)
 2. **Transformation**: Raw API responses are parsed into standardized `MigrationFlow` objects
 3. **Aggregation**: DataAggregator merges UNHCR and UNRWA data, preventing double-counting
@@ -72,6 +71,13 @@ The atlas is built as a single-page React application using modern web technolog
    - Arc thickness based on displacement volume (logarithmic scale)
    - Color intensity representing severity
    - Animated dash patterns showing direction
+
+**IOM DTM (Internal Displacement)**
+1. **Monthly Fetch**: GitHub Actions queries IOM API for all 53 countries with available data (1st of each month)
+2. **Data Prioritization**: Selects "Countrywide monitoring" data when available, falls back to regional/crisis-specific operations where not available
+3. **Year Aggregation**: Groups displacement counts by year, selecting the most recent report for each year
+4. **Cache Storage**: Saves to `public/iom-cache.json` (500KB) for client-side loading
+5. **Point Visualization**: Generates red circles at country centroids with exponentially-scaled radius based on IDP count
 
 ### Coordinate System
 
@@ -120,15 +126,19 @@ Coordinates use capital cities as representative points, with manual overrides f
 Services Layer
 - `unhcr.service.ts` - API client for UNHCR data with built-in caching
 - `unrwa.service.ts` - API client for UNRWA-specific Palestine data
+- `iom.service.ts` - API client for IOM DTM internal displacement data
 
 Processing Utilities
 - `flow-processor.ts` - Transforms raw API data into visualization arcs
 - `data-aggregator.ts` - Merges UNHCR and UNRWA datasets without duplication
+- `iom-processor.ts` - Aggregates IOM data by year and manages localStorage cache
+- `idp-points.ts` - Calculates centroid positions and circle sizing for IDP visualization
 - `globe-helpers.ts` - Geographic calculations, styling, and helper functions
 
 React Hooks
 - `useUNHCRData.ts` - Custom hooks for fetching and merging displacement data
 - `usePolygons.ts` - Loads and processes country boundary polygons for interactive features
+- `useIdpPoints.ts` - Generates IDP visualization points from cached data
 
 ### IOM DTM Architecture
 
