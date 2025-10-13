@@ -25,7 +25,7 @@ export default function ExploreToggle({
               cursor: 'pointer',
               transition: 'all 0.2s ease',
               backgroundColor: !exploreMode ? '#00bcd4' : 'transparent',
-              color: '#ffffff',
+              color: !exploreMode ? '#000000' : '#ffffff',
               boxShadow: !exploreMode ? '0 4px 12px rgba(0, 188, 212, 0.3)' : 'none',
             }}
             onMouseEnter={(e) => {
@@ -48,7 +48,7 @@ export default function ExploreToggle({
               cursor: 'pointer',
               transition: 'all 0.2s ease',
               backgroundColor: exploreMode ? '#00bcd4' : 'transparent',
-              color: '#ffffff',
+              color: exploreMode ? '#000000' : '#ffffff',
               boxShadow: exploreMode ? '0 4px 12px rgba(0, 188, 212, 0.3)' : 'none',
             }}
             onMouseEnter={(e) => {

@@ -19,15 +19,12 @@ import LoadingScreen from './LoadingScreen';
 import ErrorScreen from './ErrorScreen';
 import ExploreToggle from './ExploreToggle';
 import StatisticsPanel from './StatisticsPanel';
-import WelcomeModal from './WelcomeModal';
+import TerminologyDrawer from './TerminologyDrawer';
+import TutorialDrawer from './TutorialDrawer';
 
 export default function DisplacementGlobe() {
   const globeRef = useRef<any>();
   const [year, setYear] = useState<number>(GLOBE_CONFIG.year);
-  const [showWelcome, setShowWelcome] = useState(() => {
-    const hasVisited = localStorage.getItem('displacement-atlas-visited');
-    return !hasVisited;
-  });
   
   const [state, setState] = useState<GlobeState>({
     selectedCountry: null,
@@ -39,11 +36,6 @@ export default function DisplacementGlobe() {
     polygons: [],
     flowDirection: 'incoming',
   });
-  
-  const handleCloseWelcome = () => {
-    localStorage.setItem('displacement-atlas-visited', 'true');
-    setShowWelcome(false);
-  };
 
   const { flows, loading, error } = useGlobalFlows({ year });
   const coordinates = useMemo(() => getCoordinateMap(), []);
@@ -345,7 +337,8 @@ export default function DisplacementGlobe() {
         />
       )}
 
-      {showWelcome && <WelcomeModal onClose={handleCloseWelcome} />}
+      <TerminologyDrawer />
+      <TutorialDrawer />
     </div>
   );
 }

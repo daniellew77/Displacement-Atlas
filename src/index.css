@@ -405,3 +405,105 @@ body {
   color: #00bcd4;
   text-align: right;
 }
+
+/* Info Drawers - Left side collapsible panels */
+.info-drawer {
+  position: fixed;
+  left: 6px;
+  width: 360px;
+  max-width: 360px;
+  background: linear-gradient(135deg, #0a1929 0%, #1a2332 100%);
+  border: 1px solid rgba(0, 188, 212, 0.2);
+  box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.4);
+  z-index: 900;
+  transition: transform 0.3s ease-out;
+  color: #ffffff;
+  border-radius: 8px;
+}
+
+.info-drawer-top {
+  bottom: 280px;
+  transform: translateX(-100%);
+}
+
+.info-drawer-bottom {
+  bottom: 140px;
+  transform: translateX(-100%);
+}
+
+.info-drawer-open {
+  transform: translateX(0);
+}
+
+.info-drawer-toggle {
+  position: absolute;
+  right: -36px;
+  top: 0;
+  background: #00bcd4;
+  border: 1px solid #00bcd4;
+  border-left: none;
+  border-radius: 0 8px 8px 0;
+  padding: 10px 8px;
+  cursor: pointer;
+  color: #000000;
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  transition: all 0.2s ease;
+  box-shadow: 4px 0 12px rgba(0, 0, 0, 0.3);
+  height: 100%;
+  min-height: 140px;
+}
+
+.info-drawer-toggle:hover {
+  background: #00acc1;
+  border-color: #00acc1;
+  box-shadow: 4px 0 16px rgba(0, 188, 212, 0.5);
+}
+
+.info-drawer-open .info-drawer-toggle {
+  background: linear-gradient(135deg, #0a1929 0%, #1a2332 100%);
+  border-color: rgba(0, 188, 212, 0.2);
+  color: #ffffff;
+}
+
+.info-drawer-open .info-drawer-toggle:hover {
+  background: linear-gradient(135deg, #0f2138 0%, #1f2a3f 100%);
+  border-color: rgba(0, 188, 212, 0.4);
+  box-shadow: 4px 0 16px rgba(0, 0, 0, 0.4);
+}
+
+.info-drawer-toggle svg {
+  writing-mode: horizontal-tb;
+  transform: rotate(180deg);
+}
+
+.info-drawer-open .info-drawer-toggle svg {
+  transform: rotate(0deg);
+}
+
+.info-drawer-content {
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.info-drawer-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.info-drawer-content::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.info-drawer-content::-webkit-scrollbar-thumb {
+  background: rgba(0, 188, 212, 0.3);
+  border-radius: 4px;
+}
+
+.info-drawer-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 188, 212, 0.5);
+}

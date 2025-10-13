@@ -10,7 +10,7 @@ export default function WelcomeModal({ onClose }: { onClose: () => void }) {
               Welcome to Global Displacement Atlas!
             </h2>
             <p className="welcome-modal-subtitle">
-              Visualize decades of migration patterns from UNHCR's data
+              Use this tool to visualize decades of migration and internal displacement data from UNHCR, UNRWA, and IOM.
             </p>
           </div>
 
@@ -19,7 +19,7 @@ export default function WelcomeModal({ onClose }: { onClose: () => void }) {
               <div>
                 <h3 className="welcome-modal-feature-title">Navigate the Globe</h3>
                 <p className="welcome-modal-feature-text">
-                  Drag to rotate, scroll to zoom. Hover over migration arcs and dots to see detailed information.
+                  Drag to rotate, scroll to zoom. Hover over migration arcs and IDP hotspots to see detailed information.
                 </p>
               </div>
 
