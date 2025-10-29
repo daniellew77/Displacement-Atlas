@@ -12,11 +12,11 @@ const ACLED_REFRESH_TOKEN = import.meta.env.VITE_ACLED_REFRESH_TOKEN || '';
 // Create a singleton instance to persist tokens across component remounts
 let acledApiInstance: ACLEDApiService | null = null;
 
-function getACLEDApi(): ACLEDApiService {
+function getACLEDApi(): ACLEDApiService | null {
   if (!acledApiInstance) {
     if (!ACLED_ACCESS_TOKEN || !ACLED_REFRESH_TOKEN) {
-      console.error('ACLED credentials not found in environment variables');
-      throw new Error('ACLED credentials not configured');
+      console.warn('ACLED credentials not found in environment variables - will use cached data only');
+      return null;
     }
     acledApiInstance = new ACLEDApiService(ACLED_ACCESS_TOKEN, ACLED_REFRESH_TOKEN);
   }
@@ -44,16 +44,27 @@ export function useACLED(iso3: string, year: number) {
         
         console.log(`useACLED: Fetching data for ${iso3} ${year}`);
         
-        // Service handles all caching internally (optimized cache → localStorage → API)
         const api = getACLEDApi();
-        const eventData = await api.fetchAllCountryEvents(iso3, year);
+        let eventData: ACLEDEvent[] = [];
+        
+        if (api) {
+          // Service handles all caching internally (optimized cache → localStorage → API)
+          eventData = await api.fetchAllCountryEvents(iso3, year);
+        } else {
+          // Fallback to cache-only mode when API credentials are not available
+          console.log('ACLED API not available, using cached data only');
+          const { getACLEDEventsFromOptimizedCache } = await import('../utils/acled-cache-loader-optimized');
+          eventData = await getACLEDEventsFromOptimizedCache(iso3, year);
+        }
         
         if (!cancelled) {
           console.log(`useACLED: Received ${eventData.length} events`);
           setEvents(eventData);
           
           if (eventData.length > 0) {
-            const summaryData = api.summarizeEvents(eventData);
+            // Create a temporary API instance for summarization if needed
+            const tempApi = api || new ACLEDApiService('', '');
+            const summaryData = tempApi.summarizeEvents(eventData);
             setSummary(summaryData);
           } else {
             setSummary(null);
