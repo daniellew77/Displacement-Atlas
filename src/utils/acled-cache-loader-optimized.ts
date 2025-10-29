@@ -60,8 +60,19 @@ export async function loadACLEDCountryData(iso3: string): Promise<ACLEDCountryCa
       return null;
     }
     
+    // Check content type
+    const contentType = response.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      console.warn(`Unexpected content type for ${iso3}.json: ${contentType}`);
+    }
+    
     const text = await response.text();
-    console.log(`Raw response for ${iso3}:`, text.substring(0, 100) + '...');
+    
+    // Validate JSON before parsing
+    if (!text.trim().startsWith('{')) {
+      console.error(`Invalid JSON format for ${iso3}.json - response starts with: ${text.substring(0, 50)}`);
+      return null;
+    }
     
     return JSON.parse(text);
   } catch (error) {
