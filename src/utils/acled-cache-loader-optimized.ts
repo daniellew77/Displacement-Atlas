@@ -55,8 +55,15 @@ export async function getACLEDCacheMetadata(): Promise<ACLEDCacheMetadata | null
 export async function loadACLEDCountryData(iso3: string): Promise<ACLEDCountryCache | null> {
   try {
     const response = await fetch(`${CACHE_BASE_PATH}/${iso3}.json`);
-    if (!response.ok) return null;
-    return await response.json();
+    if (!response.ok) {
+      console.error(`Failed to fetch ${iso3}.json: ${response.status} ${response.statusText}`);
+      return null;
+    }
+    
+    const text = await response.text();
+    console.log(`Raw response for ${iso3}:`, text.substring(0, 100) + '...');
+    
+    return JSON.parse(text);
   } catch (error) {
     console.error(`Failed to load ACLED data for ${iso3}:`, error);
     return null;
