@@ -10,10 +10,12 @@
     "preview": "vite preview",
     "generate:coordinates": "node scripts/generateCoords.js",
     "fetch:acled": "node scripts/fetchAllACLEDData.js",
-    "recover:acled": "node scripts/recoverACLEDData.js"
+    "recover:acled": "node scripts/recoverACLEDData.js",
+    "upload:blob": "node scripts/uploadToBlob.js"
   },
   "dependencies": {
     "@vercel/analytics": "^1.5.0",
+    "@vercel/blob": "^2.0.0",
     "dotenv": "^17.2.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

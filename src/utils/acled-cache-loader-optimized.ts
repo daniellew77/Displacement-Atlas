@@ -4,6 +4,7 @@
  */
 
 import type { ACLEDEvent } from '../services/acled.service';
+import blobUrls from '../data/blob-urls.json';
 
 export interface ACLEDCacheMetadata {
   version: string;
@@ -22,14 +23,17 @@ export interface ACLEDCountryCache {
   version: string;
 }
 
-const CACHE_BASE_PATH = '/conflict-data';
+// Use Blob URLs instead of local files
 
 /**
  * Check if optimized ACLED cache is available
  */
 export async function isOptimizedACLEDCacheAvailable(): Promise<boolean> {
   try {
-    const response = await fetch(`${CACHE_BASE_PATH}/metadata.json`);
+    const metadataUrl = (blobUrls.urls as Record<string, string>)['metadata.json'];
+    if (!metadataUrl) return false;
+    
+    const response = await fetch(metadataUrl);
     return response.ok;
   } catch {
     return false;
@@ -41,7 +45,10 @@ export async function isOptimizedACLEDCacheAvailable(): Promise<boolean> {
  */
 export async function getACLEDCacheMetadata(): Promise<ACLEDCacheMetadata | null> {
   try {
-    const response = await fetch(`${CACHE_BASE_PATH}/metadata.json`);
+    const metadataUrl = (blobUrls.urls as Record<string, string>)['metadata.json'];
+    if (!metadataUrl) return null;
+    
+    const response = await fetch(metadataUrl);
     if (!response.ok) return null;
     return await response.json();
   } catch {
@@ -54,23 +61,33 @@ export async function getACLEDCacheMetadata(): Promise<ACLEDCacheMetadata | null
  */
 export async function loadACLEDCountryData(iso3: string): Promise<ACLEDCountryCache | null> {
   try {
-    const response = await fetch(`${CACHE_BASE_PATH}/${iso3}.json`);
+    const fileName = `${iso3}.json`;
+    const blobUrl = (blobUrls.urls as Record<string, string>)[fileName];
+    
+    if (!blobUrl) {
+      console.error(`No Blob URL found for ${fileName}`);
+      return null;
+    }
+    
+    console.log(`Loading ACLED data for ${iso3} from Blob: ${blobUrl}`);
+    
+    const response = await fetch(blobUrl);
     if (!response.ok) {
-      console.error(`Failed to fetch ${iso3}.json: ${response.status} ${response.statusText}`);
+      console.error(`Failed to fetch ${fileName} from Blob: ${response.status} ${response.statusText}`);
       return null;
     }
     
     // Check content type
     const contentType = response.headers.get('content-type');
     if (!contentType || !contentType.includes('application/json')) {
-      console.warn(`Unexpected content type for ${iso3}.json: ${contentType}`);
+      console.warn(`Unexpected content type for ${fileName}: ${contentType}`);
     }
     
     const text = await response.text();
     
     // Validate JSON before parsing
     if (!text.trim().startsWith('{')) {
-      console.error(`Invalid JSON format for ${iso3}.json - response starts with: ${text.substring(0, 50)}`);
+      console.error(`Invalid JSON format for ${fileName} - response starts with: ${text.substring(0, 50)}`);
       return null;
     }
     
