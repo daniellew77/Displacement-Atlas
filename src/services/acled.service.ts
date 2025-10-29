@@ -437,6 +437,12 @@ export interface ACLEDEvent {
         throw new Error(`No ACLED country mapping found for ISO3 code: ${iso3}`);
       }
 
+      // If no API credentials, return empty array (will rely on cache)
+      if (!this.accessToken || !this.refreshToken) {
+        console.log('ACLED API credentials not available, skipping API call');
+        return [];
+      }
+
       // Check if we need to refresh token before making request
       if (this.needsRefresh()) {
         console.log('ACLED token needs refresh, refreshing...');
@@ -529,6 +535,12 @@ export interface ACLEDEvent {
       if (cachedData) {
         this.cache.set(cacheKey, cachedData);
         return cachedData;
+      }
+
+      // If no API credentials, return empty array (will rely on cache)
+      if (!this.accessToken || !this.refreshToken) {
+        console.log('ACLED API credentials not available, skipping API call');
+        return [];
       }
 
       // Check if we need to refresh token before making request
@@ -626,6 +638,12 @@ export interface ACLEDEvent {
      */
     private async refreshAccessToken(): Promise<void> {
       try {
+        // If no refresh token available, skip refresh
+        if (!this.refreshToken) {
+          console.log('No refresh token available, skipping token refresh');
+          return;
+        }
+        
         console.log('Refreshing ACLED access token...');
         
         const body = new URLSearchParams({
