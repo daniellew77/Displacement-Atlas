@@ -36,7 +36,7 @@ export default function TutorialDrawer() {
                 fontSize: '12px',
                 fontWeight: 700
               }}>1</span>
-              Global Flow View
+              Select a Year
             </div>
             <div style={{ 
               fontSize: '14px', 
@@ -44,7 +44,7 @@ export default function TutorialDrawer() {
               color: 'rgba(255, 255, 255, 0.8)',
               marginLeft: '32px'
             }}>
-              By default, you see the top 100 global displacement routes. Use the year selector to explore data from 2000-2024. Hover over arcs to see displacement numbers between countries and IDP hotspots to see the number of internally displaced persons.
+              Use the year selector to explore displacement data from 2000-2024. The globe automatically updates to show migration flows and IDP data for your selected year.
             </div>
           </div>
 
@@ -70,7 +70,7 @@ export default function TutorialDrawer() {
                 fontSize: '12px',
                 fontWeight: 700
               }}>2</span>
-              Explore Mode
+              Click Any Country
             </div>
             <div style={{ 
               fontSize: '14px', 
@@ -78,7 +78,7 @@ export default function TutorialDrawer() {
               color: 'rgba(255, 255, 255, 0.8)',
               marginLeft: '32px'
             }}>
-              Click the "Explore" button to zoom in and enable country selection. Click any country to see detailed migration statistics and IDP data.
+              Click any country to see detailed migration statistics including asylum seekers, refugees, internally displaced persons (IDPs), and conflict events. The globe automatically centers on your selected country.
             </div>
           </div>
 
@@ -104,7 +104,7 @@ export default function TutorialDrawer() {
                 fontSize: '12px',
                 fontWeight: 700
               }}>3</span>
-              Country Details
+              Immigration vs Emigration
             </div>
             <div style={{ 
               fontSize: '14px', 
@@ -112,7 +112,7 @@ export default function TutorialDrawer() {
               color: 'rgba(255, 255, 255, 0.8)',
               marginLeft: '32px'
             }}>
-              When viewing a country, toggle between Immigration and Emigration to see people coming to or leaving from that country. View the top 10 origin or destination countries and their displacement numbers.
+              In the country dashboard, toggle between Immigration and Emigration to see people coming to or leaving from that country. View the top 10 origin or destination countries with their displacement numbers.
             </div>
           </div>
 
@@ -138,7 +138,7 @@ export default function TutorialDrawer() {
                 fontSize: '12px',
                 fontWeight: 700
               }}>4</span>
-              IDP Visualization
+              IDP & Conflict Data
             </div>
             <div style={{ 
               fontSize: '14px', 
@@ -146,7 +146,7 @@ export default function TutorialDrawer() {
               color: 'rgba(255, 255, 255, 0.8)',
               marginLeft: '32px'
             }}>
-              Red circles show internally displaced persons (IDPs) for countries with available data. Circle size represents the number of displaced people. Hover over circles to see exact counts and data sources.
+              Red circles show internally displaced persons (IDPs) for countries with available data. Hover over circles to see exact counts. Click the Conflict Events (ACLED) dropdown in country dashboards to see detailed conflict statistics and affected areas.
             </div>
           </div>
         </div>

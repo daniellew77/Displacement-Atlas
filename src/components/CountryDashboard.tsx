@@ -1,6 +1,9 @@
 import { useMemo, useState } from 'react';
 import { useIncomingFlows, useOutgoingFlows } from '../hooks/useUNHCRData';
 import { loadIOMCache } from '../utils/iom-processor';
+import { useACLED } from '../hooks/useACLED';
+import ACLEDSection from './ACLEDSection';
+
 
 type Props = {
   iso3: string;
@@ -40,6 +43,8 @@ export default function CountryDashboard({ iso3, year: initialYear, onClose, asy
   const incomingData = useIncomingFlows(iso3, selectedYear);
   const outgoingData = useOutgoingFlows(iso3, selectedYear);
   const { flows, loading, error } = direction === 'incoming' ? incomingData : outgoingData;
+
+  const acledData = useACLED(iso3, selectedYear);
 
   // Load IDP data for this country and year
   const idpData = useMemo(() => {
@@ -192,6 +197,12 @@ export default function CountryDashboard({ iso3, year: initialYear, onClose, asy
                   <span>IDP data from IOM DTM: {idpData.operation}</span>
                 </div>
               )}
+
+              <ACLEDSection 
+                summary={acledData.summary}
+                loading={acledData.loading}
+                error={acledData.error}
+              />
 
               {iso3 === 'PSE' && (
                 <div className="dashboard-data-note">

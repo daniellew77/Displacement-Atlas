@@ -1,184 +1,36 @@
 # Global Displacement Atlas
 
-## Inspiration!
+Interactive 3D globe visualizing forced displacement data worldwide—refugees, internally displaced peoples, asylum seekers, and conflict events.
 
+![Global Displacement Atlas](./public/globe.png)
+
+![Venezuela Dashboard](./public/vzla.png)
+
+# Inspiration!
 This project was inspired by the New York Times' incredible article "[To Understand Global Migration, You Have to See It First](https://www.nytimes.com/interactive/2025/04/17/opinion/global-migration-facebook-data.html)" which demonstrated the power of visualizing human migration at a global scale. While that piece focused on all forms of migration using data from Meta (2022), this atlas specifically illuminates forced displacement—refugees, internally displaced peoples, and asylum seekers—using official data from the United Nations High Commissioner for Refugees (UNHCR), the International Organization for Migration (IOM), and the United Nations Relief and Works Agency (UNRWA).
 
 The goal of this is to make the concept of migration, which we know largely anecdotally, visible on a global scale, so people can understand how migration ebbs and flows and what its current state is.  
 
 ## Data Sources
 
-### UNHCR Population Data
+**UNHCR** — Global refugee and asylum seeker data from 1951-present  
+**IOM** — Internally displaced persons (IDPs) for 53 countries, updated monthly  
+**ACLED** — Conflict events, fatalities, and violence data, updated annually  
+**UNRWA** — Palestine refugee data across five host countries
 
-The backbone of this visualization is the [UNHCR Population Statistics Database](https://www.unhcr.org/refugee-statistics/), which tracks:
+## Features
 
-- **Refugees**: People forced to flee their country due to persecution, war, or violence
-- **Asylum Seekers**: People who have applied for international protection but haven't yet received refugee status
-- **Origins and Destinations**: Where people flee from (country of origin) and where they seek safety (country of asylum)
+- **Year selection** (2000-2024) with automatic data updates
+- **Country details** showing immigration/emigration flows, IDPs, and conflict events
+- **3D visualization** using WebGL for smooth 60fps globe rotation
+- **Automated updates** via GitHub Actions for IOM (monthly) and ACLED (annually)
 
-The UNHCR API provides data from 1951 to present, covering virtually every country and territory. This project currently visualizes data from 2000-2024, showing how displacement patterns have evolved over two decades of conflict, climate change, and political upheaval.
+## Technology
 
-### IOM Displacement Tracking 
+React with TypeScript, Vite, and react-globe.gl for 3D visualization. Data cached client-side for fast loading without API calls during normal use.
 
-Internal displacement data from the [International Organization for Migration (IOM)](https://dtmapi.iom.int/) provides tracking of people displaced within their own countries:
+## Data Accuracy
 
-- **53 Countries**: Coverage of major displacement crises worldwide
-- **Multiple Operation Types**: Countrywide monitoring, conflict responses, disaster tracking
-- **1,300+ Data Points**: Regular updates from field operations
-- **Automatic Monthly Updates**: GitHub Actions automatically refreshes data on the 1st of each month
+Shows official registered data from UN agencies and IOM. May not include undocumented movements or seasonal patterns. Most recent year may be preliminary.
 
-This data complements UNHCR's cross-border refugee data by showing the full scope of both internal and external displacement.
-
-### Palestine: UNRWA Data
-
-Palestine refugees represent one of the world's oldest and largest refugee populations, but they're tracked separately by UNRWA rather than UNHCR. To ensure accuracy, this atlas integrates both sources:
-
-- **UNHCR data**: Global displacement flows including some Palestine-related movements
-- **UNRWA data**: Registered Palestine refugees across five host countries/territories
-  - Jordan: ~2.3 million registered refugees
-  - Lebanon: ~483,000 registered refugees
-  - Syria: ~568,000 registered refugees
-  - West Bank & Gaza: ~1.6 million registered refugees
-  - Egypt: ~12,000 registered refugees
-
-When you click on Palestine or any UNRWA host country, the visualization automatically merges both datasets, providing the most complete picture possible. 
-
-## Technical Architecture
-
-### Technology Stack
-
-The atlas is built as a single-page React application using modern web technologies for data visualization.
-
-**Core Technologies**
-- **React 18** (`^18.2.0`) with TypeScript (`^5.2.0`)
-- **Vite** (`^5.0.0`) 
-- **Tailwind CSS** (`^3.4.0`) 
-
-**3D Visualization**
-- **react-globe.gl** (`^2.27.2`) - Three.js-based interactive globe component
-- **Three.js** (`^0.168.0`) - WebGL-accelerated 3D graphics rendering
-- **topojson-client** (`^3.1.0`) & **world-atlas** (`^2.0.2`) - Geographic data processing
-
-### Data Processing Pipeline
-
-**UNHCR/UNRWA (Refugee & Asylum Flows)**
-1. **Fetching**: Services call UNHCR and UNRWA APIs with appropriate filters (country, year, ISO codes)
-2. **Transformation**: Raw API responses are parsed into standardized `MigrationFlow` objects
-3. **Aggregation**: DataAggregator merges UNHCR and UNRWA data, preventing double-counting
-4. **Coordinate Mapping**: Flow origins and destinations are matched to geographic coordinates
-5. **Arc Generation**: FlowProcessor converts flows into 3D arcs with:
-   - Start/end coordinates
-   - Arc thickness based on displacement volume (logarithmic scale)
-   - Color intensity representing severity
-   - Animated dash patterns showing direction
-
-**IOM DTM (Internal Displacement)**
-1. **Monthly Fetch**: GitHub Actions queries IOM API for all 53 countries with available data (1st of each month)
-2. **Data Prioritization**: Selects "Countrywide monitoring" data when available, falls back to regional/crisis-specific operations where not available
-3. **Year Aggregation**: Groups displacement counts by year, selecting the most recent report for each year
-4. **Cache Storage**: Saves to `public/iom-cache.json` (500KB) for client-side loading
-5. **Point Visualization**: Generates red circles at country centroids with exponentially-scaled radius based on IDP count
-
-### Coordinate System
-
-Geographic accuracy required a comprehensive dataset of 256 country coordinates, including:
-
-- **UN Member States**: 193 recognized countries
-- **Disputed Territories**: Palestine (PSE), Kosovo (XKX), Taiwan (TWN)
-- **Special Codes**: Stateless (STA), Unknown (UKN), Various (VAR)
-
-Coordinates use capital cities as representative points, with manual overrides for:
-- Countries with multiple capitals (Bolivia, South Africa)
-- Territories without capitals (Palestine uses Ramallah)
-- Historical codes (Tibet for legacy datasets)
-
-## Visualization Features
-
-### Two Modes of Exploration
-
-**Global View (Default)**
-- Shows top 100 global displacement routes
-- Year selector to explore data from 2000-2024
-- Hover to see specific route details
-- Auto-rotating globe 
-
-**Explore Mode**
-- Click any country to see detailed statistics
-- Toggle between immigration and emigration data
-- View top 10 origin/destination countries
-
-### Performance Optimizations
-
-**Data Volume Management**
-- Global view limits to top 100 flows (out of 300 cached)
-- Country view shows all relevant flows (typically 10-50)
-- Pagination in API calls (1000 items per request)
-- Aggressive caching prevents redundant API calls
-
-**Rendering Efficiency**
-- React.memo for expensive components
-- useMemo for coordinate maps and arc calculations
-- useCallback for event handlers to prevent re-renders
-- WebGL acceleration via Three.js for 60fps globe rotation
-
-**Data Infrastructure**
-
-Services Layer
-- `unhcr.service.ts` - API client for UNHCR data with built-in caching
-- `unrwa.service.ts` - API client for UNRWA-specific Palestine data
-- `iom.service.ts` - API client for IOM DTM internal displacement data
-
-Processing Utilities
-- `flow-processor.ts` - Transforms raw API data into visualization arcs
-- `data-aggregator.ts` - Merges UNHCR and UNRWA datasets without duplication
-- `iom-processor.ts` - Aggregates IOM data by year and manages localStorage cache
-- `idp-points.ts` - Calculates centroid positions and circle sizing for IDP visualization
-- `globe-helpers.ts` - Geographic calculations, styling, and helper functions
-
-React Hooks
-- `useUNHCRData.ts` - Custom hooks for fetching and merging displacement data
-- `usePolygons.ts` - Loads and processes country boundary polygons for interactive features
-- `useIdpPoints.ts` - Generates IDP visualization points from cached data
-
-### IOM DTM Architecture
-
-The IDP feature uses a monthly automated refresh system to keep displacement data current without impacting users or API servers.
-
-**How It Works:**
-
-1. **Monthly Data Refresh** - GitHub Actions automatically queries the IOM API on the 1st of each month, fetching data for all 53 countries and committing the updated cache to the repository.
-
-2. **Static File Deployment** - The 500KB `iom-cache.json` file deploys with the app (Vercel), ensuring all users receive identical, up-to-date data.
-
-3. **Client-Side Caching** - On first visit, the app automatically loads the cache into localStorage for instant access. Red circles appear on the globe for countries with IDP data for the selected year.
-
-4. **Data Prioritization** - When available, the system prioritizes official "Countrywide monitoring" data. For countries without nationwide statistics, it falls back to regional or crisis-specific operations (displayed in tooltips for transparency).
-
-## Data Accuracy & Limitations
-
-### What This Shows
-
-- **Official registered data**: UNHCR and UNRWA track people who have formally sought protection
-- **Annual snapshots**: Data represents the state at year-end for each year
-- **Both directions**: Unlike many government statistics, we show both incoming and outgoing flows
-- **Global coverage**: Nearly every country participates in UNHCR reporting
-
-### What's Missing
-
-- **Undocumented movements**: People who flee without formal registration
-- **Seasonal migration**: Short-term movements and circular migration patterns
-- **Real-time data**: Most recent year may be preliminary, subject to updates
-- **IDP Flow Visualization**: IDPs are shown as static circles, not directional flows (internal movement patterns not tracked by IOM)
-
-### Open Source Libraries
-
-- **react-globe.gl** by Vasco Asturiano - Three.js globe visualization
-- **Three.js** - 3D graphics library
-- **React** 
-- **Vite** 
-- **Tailwind CSS** 
-
-### Geographic Data
-
-- **REST Countries API** - Country coordinates and metadata
-- **Natural Earth** - Country boundary polygons (via world-atlas)
+---

@@ -2,7 +2,10 @@ export { UNHCRApiService } from '../services/unhcr.service';
 export { UNRWAApiService } from '../services/unrwa.service';
 export { FlowProcessor } from '../utils/flow-processor';
 export { DataAggregator } from '../utils/data-aggregator';
-export type { ToGlobeArcsOptions } from '../utils/flow-processor';
+export type { ToGlobeArcsOptions } from '../utils/flow-processor'
+export { ACLEDApiService } from '../services/acled.service';
+export { useACLED } from '../hooks/useACLED';
+export type { ACLEDEvent, ACLEDSummary } from '../services/acled.service';
 
 export {
   COUNTRY_COORDINATES,

@@ -1,0 +1,74 @@
+name: Fetch ACLED Data
+
+# Run annually on January 15th 
+on:
+  schedule:
+    - cron: '0 2 15 1 *'  # At 02:00 on January 15th
+  workflow_dispatch:  # Allow manual trigger
+
+jobs:
+  fetch-data:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Create .env file from secrets
+        run: |
+          echo "ACLED_USERNAME=${{ secrets.ACLED_USERNAME }}" >> .env
+          echo "ACLED_PASSWORD=${{ secrets.ACLED_PASSWORD }}" >> .env
+          echo "VITE_ACLED_ACCESS_TOKEN=${{ secrets.VITE_ACLED_ACCESS_TOKEN }}" >> .env
+          echo "VITE_ACLED_REFRESH_TOKEN=${{ secrets.VITE_ACLED_REFRESH_TOKEN }}" >> .env
+      
+      - name: Fetch ACLED data
+        run: node scripts/fetchAllACLEDData.js
+        timeout-minutes: 120  # 2 hour timeout for large fetch
+      
+      - name: Clean up .env file
+        if: always()
+        run: rm -f .env
+      
+      - name: Check for changes
+        id: check_changes
+        run: |
+          git diff --quiet public/conflict-data/ || echo "changes=true" >> $GITHUB_OUTPUT
+      
+      - name: Commit and push changes
+        if: steps.check_changes.outputs.changes == 'true'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add public/conflict-data/
+          git commit -m "chore: update ACLED data (automated fetch on $(date +%Y-%m-%d))"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Create summary
+        if: always()
+        run: |
+          echo "## ACLED Data Fetch Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Date**: $(date)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ -f public/conflict-data/metadata.json ]; then
+            echo "**Cache Statistics**:" >> $GITHUB_STEP_SUMMARY
+            echo '```json' >> $GITHUB_STEP_SUMMARY
+            cat public/conflict-data/metadata.json >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+          else
+            echo "Metadata file not found" >> $GITHUB_STEP_SUMMARY
+          fi
+

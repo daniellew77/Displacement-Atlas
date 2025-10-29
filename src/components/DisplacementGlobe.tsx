@@ -17,7 +17,6 @@ import type { IdpPoint } from '../utils/idp-points';
 import CountryDashboard from './CountryDashboard';
 import LoadingScreen from './LoadingScreen';
 import ErrorScreen from './ErrorScreen';
-import ExploreToggle from './ExploreToggle';
 import StatisticsPanel from './StatisticsPanel';
 import TerminologyDrawer from './TerminologyDrawer';
 import TutorialDrawer from './TutorialDrawer';
@@ -32,7 +31,7 @@ export default function DisplacementGlobe() {
     hoveredArc: null,
     hoveredPoly: null,
     autoRotate: true,
-    exploreMode: false,
+    exploreMode: true, // Always in explore mode now
     polygons: [],
     flowDirection: 'incoming',
   });
@@ -72,20 +71,6 @@ export default function DisplacementGlobe() {
     });
   }, [flows, coordinates]);
 
-  const filteredArcs = useMemo(() => {
-    let result = arcs;
-    
-    if (state.selectedCountry) {
-      result = arcs.filter(
-        arc => arc.originIso === state.selectedCountry || arc.asylumIso === state.selectedCountry
-      );
-    } else {
-      result = result.slice(0, 100);
-    }
-    
-    return result;
-  }, [arcs, state.selectedCountry]);
-
   const incomingOnlyArcs = useMemo(() => {
     if (!state.selectedCountry) return arcs.slice(0, 100);
     return arcs.filter(arc => arc.asylumIso === state.selectedCountry);
@@ -104,10 +89,10 @@ export default function DisplacementGlobe() {
 
     const controls = globe.controls();
     if (controls) {
-      controls.autoRotate = state.autoRotate && !state.selectedCountry && !state.exploreMode;
+      controls.autoRotate = state.autoRotate && !state.selectedCountry;
       controls.autoRotateSpeed = GLOBE_CONFIG.autoRotateSpeed;
     }
-  }, [state.autoRotate, state.selectedCountry, state.exploreMode]);
+  }, [state.autoRotate, state.selectedCountry]);
 
   const handleGlobeClick = useCallback(() => {
     setState(prev => ({
@@ -147,31 +132,7 @@ export default function DisplacementGlobe() {
 
   const handlePolygonHover = useCallback((f: any) => {
     setState(prev => ({ ...prev, hoveredPoly: f || null }));
-    document.body.style.cursor = state.exploreMode && f ? 'pointer' : 'default';
-  }, [state.exploreMode]);
-
-  const handleToggleExplore = useCallback(() => {
-    setState(prev => {
-      const newExploreMode = !prev.exploreMode;
-      
-      // Zoom in when entering explore mode, zoom out when exiting
-      if (globeRef.current) {
-        const currentPOV = globeRef.current.pointOfView();
-        const targetAltitude = newExploreMode ? 1.8 : 2.5;
-        globeRef.current.pointOfView({
-          lat: currentPOV.lat,
-          lng: currentPOV.lng,
-          altitude: targetAltitude
-        }, 800);
-      }
-      
-      return {
-        ...prev,
-        exploreMode: newExploreMode,
-        selectedCountry: newExploreMode ? prev.selectedCountry : null,
-        selectedCountryName: newExploreMode ? prev.selectedCountryName : null,
-      };
-    });
+    document.body.style.cursor = f ? 'pointer' : 'default';
   }, []);
 
   const getArcColor = useCallback((d: any) => {
@@ -194,12 +155,11 @@ export default function DisplacementGlobe() {
   }, []);
 
   const getPolygonLabel = useCallback((f: any) => {
-    if (!state.exploreMode) return '';
     const name = f?.properties?.__name ?? 'Unknown';
     return createTooltip(`
       <div style="font-weight: bold; margin-bottom: 4px;">${name}</div>
     `);
-  }, [state.exploreMode]);
+  }, []);
 
   const getIdpPointRadius = useCallback((point: any) => (point as IdpPoint).size, []);
   const getIdpPointColorCallback = useCallback((point: any) => getIdpPointColor((point as IdpPoint).idpCount), []);
@@ -218,11 +178,7 @@ export default function DisplacementGlobe() {
           globeImageUrl="//unpkg.com/three-globe/example/img/earth-blue-marble.jpg"
           backgroundImageUrl="//unpkg.com/three-globe/example/img/night-sky.png"
           
-          arcsData={
-            state.exploreMode 
-              ? (state.flowDirection === 'incoming' ? incomingOnlyArcs : outgoingOnlyArcs)
-              : filteredArcs
-          }
+          arcsData={state.flowDirection === 'incoming' ? incomingOnlyArcs : outgoingOnlyArcs}
           arcStartLat="startLat"
           arcStartLng="startLng"
           arcEndLat="endLat"
@@ -241,7 +197,7 @@ export default function DisplacementGlobe() {
           enablePointerInteraction={true}
           onGlobeClick={handleGlobeClick}
           
-          polygonsData={state.exploreMode ? state.polygons : []}
+          polygonsData={state.polygons}
           polygonCapColor={(f: any) => (f === state.hoveredPoly ? 'rgba(0, 188, 212, 0.4)' : 'rgba(255,255,255,0.02)')}
           polygonSideColor={() => 'rgba(0,0,0,0)'}
           polygonStrokeColor={(f: any) => (f === state.hoveredPoly ? 'rgba(0, 188, 212, 0.9)' : 'rgba(255,255,255,0.35)')}
@@ -278,48 +234,44 @@ export default function DisplacementGlobe() {
             </div>
           )}
           
-          <ExploreToggle exploreMode={state.exploreMode} onToggle={handleToggleExplore} />
-          
-          {!state.exploreMode && (
-            <div style={{
-              marginTop: '24px',
-              paddingBottom: '24px',
-              borderBottom: '1px solid rgba(0, 188, 212, 0.1)',
+          <div style={{
+            marginTop: '24px',
+            paddingBottom: '24px',
+            borderBottom: '1px solid rgba(0, 188, 212, 0.1)',
+          }}>
+            <p style={{ 
+              fontSize: '13px', 
+              color: 'rgba(255, 255, 255, 0.7)', 
+              textAlign: 'center',
+              marginBottom: '12px',
+              lineHeight: '1.5'
             }}>
-              <p style={{ 
-                fontSize: '13px', 
-                color: 'rgba(255, 255, 255, 0.7)', 
-                textAlign: 'center',
-                marginBottom: '12px',
-                lineHeight: '1.5'
-              }}>
-                Explore global migration across the years
-              </p>
-              <div className="flex items-center justify-center gap-2">
-                <span style={{ fontSize: '14px', color: 'rgba(255, 255, 255, 0.7)' }}>Viewing Year:</span>
-                <select
-                  value={year}
-                  onChange={(e) => setYear(Number(e.target.value))}
-                  style={{
-                    padding: '4px 10px',
-                    borderRadius: '6px',
-                    background: '#ffffff',
-                    border: '1px solid rgba(0, 188, 212, 0.3)',
-                    fontSize: '13px',
-                    fontWeight: 600,
-                    color: '#000000',
-                    cursor: 'pointer',
-                  }}
-                >
-                  {[2024, 2023, 2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015, 2014, 2013, 2012, 2011, 2010, 2009, 2008, 2007, 2006, 2005, 2004, 2003, 2002, 2001, 2000].map(y => (
-                    <option key={y} value={y}>
-                      {y}
-                    </option>
-                  ))}
-                </select>
-              </div>
+              Click any country to explore detailed migration data
+            </p>
+            <div className="flex items-center justify-center gap-2">
+              <span style={{ fontSize: '14px', color: 'rgba(255, 255, 255, 0.7)' }}>Viewing Year:</span>
+              <select
+                value={year}
+                onChange={(e) => setYear(Number(e.target.value))}
+                style={{
+                  padding: '4px 10px',
+                  borderRadius: '6px',
+                  background: '#ffffff',
+                  border: '1px solid rgba(0, 188, 212, 0.3)',
+                  fontSize: '13px',
+                  fontWeight: 600,
+                  color: '#000000',
+                  cursor: 'pointer',
+                }}
+              >
+                {[2024, 2023, 2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015, 2014, 2013, 2012, 2011, 2010, 2009, 2008, 2007, 2006, 2005, 2004, 2003, 2002, 2001, 2000].map(y => (
+                  <option key={y} value={y}>
+                    {y}
+                  </option>
+                ))}
+              </select>
             </div>
-          )}
+          </div>
 
           <StatisticsPanel hoveredArc={state.hoveredArc} />
         </div>
