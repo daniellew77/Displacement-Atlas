@@ -6,7 +6,7 @@
 const IOM_API_BASE = 'https://dtmapi.iom.int/api';
 
 async function fetchCountryList() {
-  console.log('📋 Fetching list of all countries from IOM API...\n');
+  console.log('Fetching list of all countries from IOM API...\n');
   try {
     const response = await fetch(`${IOM_API_BASE}/Common/GetAllCountryList`);
     const data = await response.json();
@@ -89,7 +89,7 @@ function aggregateByYear(dataPoints) {
 }
 
 async function main() {
-  console.log('🌍 Fetching ALL IOM IDP Data (All Operations)\n');
+  console.log('Fetching ALL IOM IDP Data (All Operations)\n');
   console.log('============================================\n');
   
   const countries = await fetchCountryList();
@@ -142,9 +142,9 @@ async function main() {
   }
   
   console.log('\n============================================');
-  console.log(`✅ Successfully fetched IDP data for ${successCount} countries`);
-  console.log(`📊 Total data points: ${totalDataPoints}`);
-  console.log(`📅 Years covered: ${Math.min(...yearSet)} - ${Math.max(...yearSet)}`);
+  console.log(`Successfully fetched IDP data for ${successCount} countries`);
+  console.log(`Total data points: ${totalDataPoints}`);
+  console.log(`Years covered: ${Math.min(...yearSet)} - ${Math.max(...yearSet)}`);
   console.log('============================================\n');
   
   // Save to file
@@ -156,16 +156,14 @@ async function main() {
     version: 1,
   };
   
-  // Save to both locations
-  fs.writeFileSync('./src/data/iom-idp-data.json', JSON.stringify(cacheData, null, 2));
+  // Save to public directory (used by the app at runtime)
   fs.writeFileSync('./public/iom-cache.json', JSON.stringify(cacheData, null, 2));
   
-  console.log('💾 Data saved to:');
-  console.log('   - ./src/data/iom-idp-data.json');
+  console.log('Data saved to:');
   console.log('   - ./public/iom-cache.json\n');
   
   // Print summary table
-  console.log('📊 Countries with IDP Data:');
+  console.log('Countries with IDP Data:');
   console.log('============================\n');
   
   const entries = Object.entries(allData).sort((a, b) => {
@@ -188,8 +186,8 @@ async function main() {
     );
   }
   
-  console.log(`\n✅ Total countries with data: ${successCount}`);
-  console.log('\n💡 To load this data in your browser:');
+  console.log(`\nTotal countries with data: ${successCount}`);
+  console.log('\nTo load this data in your browser:');
   console.log('   1. Start your dev server: npm run dev');
   console.log('   2. Open browser console (F12)');
   console.log('   3. Run: window.loadIOMCache()');

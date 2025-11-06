@@ -117,7 +117,7 @@ async function generateCountryCoordinates() {
     // Sort by ISO code
     coordinates.sort((a, b) => a.iso3.localeCompare(b.iso3));
     
-    console.log(`📊 Generated ${coordinates.length} country coordinates\n`);
+    console.log(`Generated ${coordinates.length} country coordinates\n`);
     return coordinates;
     
   } catch (error) {
@@ -176,24 +176,24 @@ async function main() {
     const tsOutput = generateTypeScript(coordinates);
     const tsPath = join(dataDir, 'country-coordinates.ts');
     writeFileSync(tsPath, tsOutput, 'utf-8');
-    console.log(`✅ TypeScript file saved: ${tsPath}\n`);
+    console.log(`TypeScript file saved: ${tsPath}\n`);
     
     // Generate and save JSON file
     const jsonOutput = JSON.stringify(coordinates, null, 2);
     const jsonPath = join(dataDir, 'country-coordinates.json');
     writeFileSync(jsonPath, jsonOutput, 'utf-8');
-    console.log(`✅ JSON file saved: ${jsonPath}\n`);
+    console.log(`JSON file saved: ${jsonPath}\n`);
     
     // Print statistics
     console.log('='.repeat(70));
-    console.log('📊 Dataset Statistics');
+    console.log('Dataset Statistics');
     console.log('='.repeat(70));
     console.log(`  Total countries: ${coordinates.length}`);
     console.log(`  With capitals: ${coordinates.filter(c => c.capital !== 'N/A').length}`);
     console.log(`  Special codes: ${coordinates.filter(c => ['STA', 'UKN', 'XXA', 'VAR'].includes(c.iso3)).length}`);
     console.log();
     console.log('='.repeat(70));
-    console.log('✨ Generation complete! You can now use these files in your app.');
+    console.log('Generation complete! You can now use these files in your app.');
     console.log('='.repeat(70));
     console.log();
     console.log('Usage example:');
@@ -202,7 +202,7 @@ async function main() {
     console.log();
     
   } catch (error) {
-    console.error('\n❌ Generation failed:', error);
+    console.error('\nERROR: Generation failed:', error);
     process.exit(1);
   }
 }

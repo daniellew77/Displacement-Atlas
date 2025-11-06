@@ -23,7 +23,7 @@ const ACLED_USERNAME = process.env.ACLED_USERNAME || '';
 const ACLED_PASSWORD = process.env.ACLED_PASSWORD || '';
 
 if (!ACLED_USERNAME || !ACLED_PASSWORD) {
-  console.error('❌ ACLED login credentials not found!');
+  console.error('ERROR: ACLED login credentials not found!');
   console.error('Please set ACLED_USERNAME and ACLED_PASSWORD environment variables');
   console.error('Or run: ACLED_USERNAME=your_email ACLED_PASSWORD=your_password node scripts [...]');
   process.exit(1);
@@ -295,7 +295,7 @@ const ISO_TO_ACLED_COUNTRY = {
 async function fetchCountryYearEvents(iso3, year) {
   const countryName = ISO_TO_ACLED_COUNTRY[iso3];
   if (!countryName) {
-    console.warn(`⚠️  No ACLED mapping for ${iso3}`);
+    console.warn(`WARNING: No ACLED mapping for ${iso3}`);
     return [];
   }
 

@@ -76,7 +76,7 @@ async function fetchUNRWAYear(year) {
  * Main function to fetch all data
  */
 async function fetchAllData() {
-  console.log('🌍 Starting UNHCR & UNRWA data fetch...\n');
+  console.log('Starting UNHCR & UNRWA data fetch...\n');
   
   const unhcrData = {};
   const unrwaData = {};
@@ -122,10 +122,10 @@ async function fetchAllData() {
   fs.writeFileSync(unhcrPublicPath, JSON.stringify(unhcrCache, null, 2));
   fs.writeFileSync(unrwaPublicPath, JSON.stringify(unrwaCache, null, 2));
   
-  console.log('\n✅ Data saved successfully!');
+  console.log('\nData saved successfully!');
   console.log(`   UNHCR: ${unhcrPublicPath}`);
   console.log(`   UNRWA: ${unrwaPublicPath}`);
-  console.log(`\n📊 Summary:`);
+  console.log(`\nSummary:`);
   console.log(`   UNHCR years: ${unhcrCache.years.join(', ')}`);
   console.log(`   UNRWA years: ${unrwaCache.years.join(', ')}`);
   console.log(`   Total UNHCR records: ${Object.values(unhcrData).reduce((sum, items) => sum + items.length, 0).toLocaleString()}`);
