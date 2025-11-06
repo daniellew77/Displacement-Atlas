@@ -8,7 +8,13 @@ const IOM_API_BASE = 'https://dtmapi.iom.int/api';
 async function fetchCountryList() {
   console.log('📋 Fetching list of all countries from IOM API...\n');
   try {
-    const response = await fetch(`${IOM_API_BASE}/Common/GetAllCountryList`);
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+    
+    const response = await fetch(`${IOM_API_BASE}/Common/GetAllCountryList`, {
+      signal: controller.signal
+    });
+    clearTimeout(timeoutId);
     const data = await response.json();
     
     if (!data.isSuccess) {
@@ -32,7 +38,13 @@ async function fetchCountryIdpData(countryName, operation = '') {
   url.searchParams.set('ToRoundNumber', '');
 
   try {
-    const response = await fetch(url.toString());
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+    
+    const response = await fetch(url.toString(), {
+      signal: controller.signal
+    });
+    clearTimeout(timeoutId);
     const data = await response.json();
     
     if (!data.isSuccess) {
