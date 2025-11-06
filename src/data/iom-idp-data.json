@@ -59,7 +59,7 @@
           "operation": "Returns and displacement in Afghanistan"
         }
       ],
-      "lastUpdated": "2025-10-11T18:23:04.331Z",
+      "lastUpdated": "2025-11-06T16:11:23.313Z",
       "hasData": true
     },
     "ATG": {
@@ -76,7 +76,7 @@
           "operation": "Hurricane Season in the Caribbean (2017)"
         }
       ],
-      "lastUpdated": "2025-10-11T18:23:04.680Z",
+      "lastUpdated": "2025-11-06T16:11:23.903Z",
       "hasData": true
     },
     "BHS": {
@@ -93,7 +93,7 @@
           "operation": "Bahamas (the) - Hurricane Dorian Response"
         }
       ],
-      "lastUpdated": "2025-10-11T18:23:04.968Z",
+      "lastUpdated": "2025-11-06T16:11:24.232Z",
       "hasData": true
     },
     "BEN": {
@@ -119,7 +119,7 @@
           "operation": "Sahel Crisis"
         }
       ],
-      "lastUpdated": "2025-10-11T18:23:05.262Z",
+      "lastUpdated": "2025-11-06T16:11:24.559Z",
       "hasData": true
     },
     "BOL": {
@@ -136,7 +136,7 @@
           "operation": "Floods(2018)"
         }
       ],
-      "lastUpdated": "2025-10-11T18:23:05.554Z",
+      "lastUpdated": "2025-11-06T16:11:24.884Z",
       "hasData": true
     },
     "BFA": {
@@ -162,7 +162,7 @@
           "operation": "Burkina Faso Crisis"
         }
       ],
-      "lastUpdated": "2025-10-11T18:23:05.846Z",
+      "lastUpdated": "2025-11-06T16:11:25.209Z",
       "hasData": true
     },
     "BDI": {
@@ -260,7 +260,7 @@
           "operation": "Burundi Complex Emergency"
         }
       ],
-      "lastUpdated": "2025-10-11T18:23:06.140Z",
+      "lastUpdated": "2025-11-06T16:11:25.541Z",
       "hasData": true
     },
     "CMR": {
@@ -367,7 +367,7 @@
           "operation": "Lake Chad Basin Crisis"
         }
       ],
-      "lastUpdated": "2025-10-11T18:23:06.429Z",
+      "lastUpdated": "2025-11-06T16:11:25.871Z",
       "hasData": true
     },
     "CAF": {
@@ -447,7 +447,7 @@
           "operation": "Central African Republic conflict"
         }
       ],
-      "lastUpdated": "2025-10-11T18:23:06.721Z",
+      "lastUpdated": "2025-11-06T16:11:26.195Z",
       "hasData": true
     },
     "TCD": {
@@ -536,7 +536,7 @@
           "operation": "Lake Chad Basin Crisis"
         }
       ],
-      "lastUpdated": "2025-10-11T18:23:07.012Z",
+      "lastUpdated": "2025-11-06T16:11:26.519Z",
       "hasData": true
     },
     "COD": {
@@ -545,12 +545,12 @@
       "yearlyData": [
         {
           "year": 2025,
-          "totalIdps": 1011335,
+          "totalIdps": 4915515,
           "dataPoints": 2,
-          "minIdps": 1011335,
-          "maxIdps": 1466462,
-          "latestReportDate": "2025-05-31T00:00:00",
-          "operation": "Nord Kivu"
+          "minIdps": 4915515,
+          "maxIdps": 5039256,
+          "latestReportDate": "2025-09-30T00:00:00",
+          "operation": "Countrywide monitoring"
         },
         {
           "year": 2024,
@@ -608,12 +608,12 @@
         },
         {
           "year": 2018,
-          "totalIdps": 156914,
+          "totalIdps": 131627,
           "dataPoints": 30,
           "minIdps": 35588,
           "maxIdps": 1168864,
           "latestReportDate": "2018-12-30T00:00:00",
-          "operation": "Tanganyika"
+          "operation": "Sud Kivu"
         },
         {
           "year": 2017,
@@ -634,7 +634,7 @@
           "operation": "Nord Kivu"
         }
       ],
-      "lastUpdated": "2025-10-11T18:23:07.303Z",
+      "lastUpdated": "2025-11-06T16:11:26.863Z",
       "hasData": true
     },
     "DJI": {
@@ -651,7 +651,7 @@
           "operation": "Drought Impact"
         }
       ],
-      "lastUpdated": "2025-10-11T18:23:07.590Z",
+      "lastUpdated": "2025-11-06T16:11:27.203Z",
       "hasData": true
     },
     "DMA": {
@@ -677,7 +677,7 @@
           "operation": "Hurricane Season in the Caribbean (2017)"
         }
       ],
-      "lastUpdated": "2025-10-11T18:23:07.882Z",
+      "lastUpdated": "2025-11-06T16:11:27.532Z",
       "hasData": true
     },
     "ECU": {
@@ -703,7 +703,7 @@
           "operation": "Ecuador Earthquake"
         }
       ],
-      "lastUpdated": "2025-10-11T18:23:08.178Z",
+      "lastUpdated": "2025-11-06T16:11:27.855Z",
       "hasData": true
     },
     "SLV": {
@@ -720,7 +720,7 @@
           "operation": "Storms Amanda and Cristobal Response in El Salvador"
         }
       ],
-      "lastUpdated": "2025-10-11T18:23:08.464Z",
+      "lastUpdated": "2025-11-06T16:11:28.183Z",
       "hasData": true
     },
     "ETH": {
@@ -800,7 +800,7 @@
           "operation": "Countrywide monitoring"
         }
       ],
-      "lastUpdated": "2025-10-11T18:23:08.757Z",
+      "lastUpdated": "2025-11-06T16:11:28.509Z",
       "hasData": true
     },
     "FJI": {
@@ -817,7 +817,7 @@
           "operation": "Tropical Cyclone Winston"
         }
       ],
-      "lastUpdated": "2025-10-11T18:23:09.041Z",
+      "lastUpdated": "2025-11-06T16:11:28.839Z",
       "hasData": true
     },
     "GRD": {
@@ -834,7 +834,7 @@
           "operation": "Hurricane Beryl"
         }
       ],
-      "lastUpdated": "2025-10-11T18:23:09.326Z",
+      "lastUpdated": "2025-11-06T16:11:29.165Z",
       "hasData": true
     },
     "GTM": {
@@ -860,7 +860,7 @@
           "operation": "Erupcion del Volcan de Fuego"
         }
       ],
-      "lastUpdated": "2025-10-11T18:23:09.616Z",
+      "lastUpdated": "2025-11-06T16:11:29.492Z",
       "hasData": true
     },
     "HTI": {
@@ -869,11 +869,11 @@
       "yearlyData": [
         {
           "year": 2025,
-          "totalIdps": 1287593,
-          "dataPoints": 1,
+          "totalIdps": 1412199,
+          "dataPoints": 2,
           "minIdps": 1287593,
-          "maxIdps": 1287593,
-          "latestReportDate": "2025-06-30T00:00:00",
+          "maxIdps": 1412199,
+          "latestReportDate": "2025-09-30T00:00:00",
           "operation": "Countrywide monitoring"
         },
         {
@@ -1003,7 +1003,7 @@
           "operation": "Haiti Earthquake"
         }
       ],
-      "lastUpdated": "2025-10-11T18:23:09.981Z",
+      "lastUpdated": "2025-11-06T16:11:29.826Z",
       "hasData": true
     },
     "HND": {
@@ -1020,7 +1020,7 @@
           "operation": "Hurricane ETA and IOTA response"
         }
       ],
-      "lastUpdated": "2025-10-11T18:23:10.278Z",
+      "lastUpdated": "2025-11-06T16:11:30.160Z",
       "hasData": true
     },
     "IDN": {
@@ -1055,7 +1055,7 @@
           "operation": "Aceh earthquake"
         }
       ],
-      "lastUpdated": "2025-10-11T18:23:10.572Z",
+      "lastUpdated": "2025-11-06T16:11:30.546Z",
       "hasData": true
     },
     "IRQ": {
@@ -1162,7 +1162,7 @@
           "operation": "Iraq conflict"
         }
       ],
-      "lastUpdated": "2025-10-11T18:23:10.870Z",
+      "lastUpdated": "2025-11-06T16:11:30.873Z",
       "hasData": true
     },
     "KEN": {
@@ -1206,7 +1206,7 @@
           "operation": "Kenya mixed displacement"
         }
       ],
-      "lastUpdated": "2025-10-11T18:23:11.160Z",
+      "lastUpdated": "2025-11-06T16:11:31.196Z",
       "hasData": true
     },
     "LAO": {
@@ -1223,7 +1223,7 @@
           "operation": "Flash Floods in Attapeu"
         }
       ],
-      "lastUpdated": "2025-10-11T18:23:11.448Z",
+      "lastUpdated": "2025-11-06T16:11:31.528Z",
       "hasData": true
     },
     "LBN": {
@@ -1258,7 +1258,7 @@
           "operation": "Displacement due to conflict"
         }
       ],
-      "lastUpdated": "2025-10-11T18:23:11.762Z",
+      "lastUpdated": "2025-11-06T16:11:31.863Z",
       "hasData": true
     },
     "LBY": {
@@ -1338,7 +1338,7 @@
           "operation": "Libya Crisis"
         }
       ],
-      "lastUpdated": "2025-10-11T18:23:12.079Z",
+      "lastUpdated": "2025-11-06T16:11:32.194Z",
       "hasData": true
     },
     "MDG": {
@@ -1373,7 +1373,7 @@
           "operation": "Drought in Madagascar"
         }
       ],
-      "lastUpdated": "2025-10-11T18:23:12.368Z",
+      "lastUpdated": "2025-11-06T16:11:32.520Z",
       "hasData": true
     },
     "MWI": {
@@ -1417,7 +1417,7 @@
           "operation": "Malawi Floods"
         }
       ],
-      "lastUpdated": "2025-10-11T18:23:12.665Z",
+      "lastUpdated": "2025-11-06T16:11:32.852Z",
       "hasData": true
     },
     "MLI": {
@@ -1515,7 +1515,7 @@
           "operation": "Mali Conflict"
         }
       ],
-      "lastUpdated": "2025-10-11T18:23:12.957Z",
+      "lastUpdated": "2025-11-06T16:11:33.179Z",
       "hasData": true
     },
     "MNG": {
@@ -1532,7 +1532,7 @@
           "operation": "Mongolia countrywide monitoring"
         }
       ],
-      "lastUpdated": "2025-10-11T18:23:13.251Z",
+      "lastUpdated": "2025-11-06T16:11:33.506Z",
       "hasData": true
     },
     "MOZ": {
@@ -1603,7 +1603,7 @@
           "operation": "Cyclone Idai"
         }
       ],
-      "lastUpdated": "2025-10-11T18:23:13.540Z",
+      "lastUpdated": "2025-11-06T16:11:33.831Z",
       "hasData": true
     },
     "NPL": {
@@ -1647,7 +1647,7 @@
           "operation": "Nepal Earthquake"
         }
       ],
-      "lastUpdated": "2025-10-11T18:23:13.829Z",
+      "lastUpdated": "2025-11-06T16:11:34.170Z",
       "hasData": true
     },
     "NER": {
@@ -1682,7 +1682,7 @@
           "operation": "Displacement in Tahoua and Tillaberi"
         }
       ],
-      "lastUpdated": "2025-10-11T18:23:14.119Z",
+      "lastUpdated": "2025-11-06T16:11:34.497Z",
       "hasData": true
     },
     "NGA": {
@@ -1690,13 +1690,22 @@
       "iso3": "NGA",
       "yearlyData": [
         {
+          "year": 2025,
+          "totalIdps": 1252042,
+          "dataPoints": 2,
+          "minIdps": 1252042,
+          "maxIdps": 2292477,
+          "latestReportDate": "2025-05-31T00:00:00",
+          "operation": "North Central and North West"
+        },
+        {
           "year": 2024,
-          "totalIdps": 2252348,
-          "dataPoints": 4,
-          "minIdps": 1322766,
+          "totalIdps": 1322766,
+          "dataPoints": 6,
+          "minIdps": 1192416,
           "maxIdps": 2271987,
           "latestReportDate": "2024-11-30T00:00:00",
-          "operation": "Lake Chad Basin Crisis"
+          "operation": "North Central and North West"
         },
         {
           "year": 2023,
@@ -1789,7 +1798,7 @@
           "operation": "Lake Chad Basin Crisis"
         }
       ],
-      "lastUpdated": "2025-10-11T18:23:14.406Z",
+      "lastUpdated": "2025-11-06T16:11:34.825Z",
       "hasData": true
     },
     "PAK": {
@@ -1824,7 +1833,7 @@
           "operation": "Pakistan floods (2012)"
         }
       ],
-      "lastUpdated": "2025-10-11T18:23:14.693Z",
+      "lastUpdated": "2025-11-06T16:11:35.147Z",
       "hasData": true
     },
     "PNG": {
@@ -1859,7 +1868,7 @@
           "operation": "Papua New Guinea Country monitoring"
         }
       ],
-      "lastUpdated": "2025-10-11T18:23:14.981Z",
+      "lastUpdated": "2025-11-06T16:11:35.474Z",
       "hasData": true
     },
     "PER": {
@@ -1876,7 +1885,7 @@
           "operation": "El Nino Costero"
         }
       ],
-      "lastUpdated": "2025-10-11T18:23:15.271Z",
+      "lastUpdated": "2025-11-06T16:11:35.798Z",
       "hasData": true
     },
     "PHL": {
@@ -1920,7 +1929,7 @@
           "operation": "Typhoon Haiyan"
         }
       ],
-      "lastUpdated": "2025-10-11T18:23:15.568Z",
+      "lastUpdated": "2025-11-06T16:11:36.121Z",
       "hasData": true
     },
     "ARM": {
@@ -1937,7 +1946,7 @@
           "operation": "Arrivals in Armenia"
         }
       ],
-      "lastUpdated": "2025-10-11T18:23:15.853Z",
+      "lastUpdated": "2025-11-06T16:11:36.444Z",
       "hasData": true
     },
     "VCT": {
@@ -1954,7 +1963,7 @@
           "operation": "Hurricane Beryl"
         }
       ],
-      "lastUpdated": "2025-10-11T18:23:16.141Z",
+      "lastUpdated": "2025-11-06T16:11:36.768Z",
       "hasData": true
     },
     "SOM": {
@@ -2007,7 +2016,7 @@
           "operation": "Somalia displacement"
         }
       ],
-      "lastUpdated": "2025-10-11T18:23:16.435Z",
+      "lastUpdated": "2025-11-06T16:11:37.110Z",
       "hasData": true
     },
     "ZAF": {
@@ -2024,7 +2033,7 @@
           "operation": "KwaZulu-Natal Floods 2022"
         }
       ],
-      "lastUpdated": "2025-10-11T18:23:16.725Z",
+      "lastUpdated": "2025-11-06T16:11:37.434Z",
       "hasData": true
     },
     "SSD": {
@@ -2140,7 +2149,7 @@
           "operation": "Mobility Tracking"
         }
       ],
-      "lastUpdated": "2025-10-11T18:23:17.021Z",
+      "lastUpdated": "2025-11-06T16:11:37.762Z",
       "hasData": true
     },
     "LKA": {
@@ -2157,7 +2166,7 @@
           "operation": "Sri Lanka Floods (2017)"
         }
       ],
-      "lastUpdated": "2025-10-11T18:23:17.305Z",
+      "lastUpdated": "2025-11-06T16:11:38.086Z",
       "hasData": true
     },
     "SDN": {
@@ -2166,11 +2175,11 @@
       "yearlyData": [
         {
           "year": 2025,
-          "totalIdps": 9819680,
-          "dataPoints": 8,
-          "minIdps": 9819680,
+          "totalIdps": 9584349,
+          "dataPoints": 9,
+          "minIdps": 9584349,
           "maxIdps": 11585384,
-          "latestReportDate": "2025-08-31T00:00:00",
+          "latestReportDate": "2025-09-30T00:00:00",
           "operation": "Armed Clashes in Sudan (Overview)"
         },
         {
@@ -2184,12 +2193,12 @@
         },
         {
           "year": 2023,
-          "totalIdps": 9052822,
+          "totalIdps": 5856777,
           "dataPoints": 38,
           "minIdps": 334053,
           "maxIdps": 9052822,
           "latestReportDate": "2023-12-31T00:00:00",
-          "operation": "Armed Clashes in Sudan (Overview)"
+          "operation": "Armed Clashes in Sudan (Monthly)"
         },
         {
           "year": 2022,
@@ -2309,7 +2318,7 @@
           "operation": "Darfur conflict"
         }
       ],
-      "lastUpdated": "2025-10-11T18:23:17.615Z",
+      "lastUpdated": "2025-11-06T16:11:38.413Z",
       "hasData": true
     },
     "SYR": {
@@ -2326,7 +2335,7 @@
           "operation": "As-Sweida Conflict"
         }
       ],
-      "lastUpdated": "2025-10-11T18:23:17.903Z",
+      "lastUpdated": "2025-11-06T16:11:38.737Z",
       "hasData": true
     },
     "UGA": {
@@ -2370,7 +2379,7 @@
           "operation": "Floods in Uganda (2020)"
         }
       ],
-      "lastUpdated": "2025-10-11T18:23:18.188Z",
+      "lastUpdated": "2025-11-06T16:11:39.065Z",
       "hasData": true
     },
     "UKR": {
@@ -2379,42 +2388,42 @@
       "yearlyData": [
         {
           "year": 2025,
-          "totalIdps": 3329803,
-          "dataPoints": 6,
-          "minIdps": 3321075,
-          "maxIdps": 3353062,
-          "latestReportDate": "2025-08-31T00:00:00",
+          "totalIdps": 3359190,
+          "dataPoints": 7,
+          "minIdps": 3337006,
+          "maxIdps": 3369015,
+          "latestReportDate": "2025-09-30T00:00:00",
           "operation": "Displacement due to Conflict in Ukraine (Registration)"
         },
         {
           "year": 2024,
-          "totalIdps": 3380167,
+          "totalIdps": 3396293,
           "dataPoints": 11,
-          "minIdps": 3379131,
-          "maxIdps": 3556530,
+          "minIdps": 3395349,
+          "maxIdps": 3573161,
           "latestReportDate": "2024-11-30T00:00:00",
           "operation": "Displacement due to Conflict in Ukraine (Registration)"
         },
         {
           "year": 2023,
-          "totalIdps": 3568783,
+          "totalIdps": 3585471,
           "dataPoints": 12,
-          "minIdps": 3478485,
-          "maxIdps": 3582243,
+          "minIdps": 3496158,
+          "maxIdps": 3599069,
           "latestReportDate": "2023-12-31T00:00:00",
           "operation": "Displacement due to Conflict in Ukraine (Registration)"
         },
         {
           "year": 2022,
-          "totalIdps": 3478849,
+          "totalIdps": 3497099,
           "dataPoints": 11,
-          "minIdps": 18921,
-          "maxIdps": 3495327,
+          "minIdps": 18952,
+          "maxIdps": 3514516,
           "latestReportDate": "2022-12-31T00:00:00",
           "operation": "Displacement due to Conflict in Ukraine (Registration)"
         }
       ],
-      "lastUpdated": "2025-10-11T18:23:18.492Z",
+      "lastUpdated": "2025-11-06T16:11:39.396Z",
       "hasData": true
     },
     "VUT": {
@@ -2467,13 +2476,22 @@
           "operation": "Cyclone Pam"
         }
       ],
-      "lastUpdated": "2025-10-11T18:23:18.781Z",
+      "lastUpdated": "2025-11-06T16:11:39.720Z",
       "hasData": true
     },
     "YEM": {
       "countryName": "Yemen",
       "iso3": "YEM",
       "yearlyData": [
+        {
+          "year": 2025,
+          "totalIdps": 3066330,
+          "dataPoints": 1,
+          "minIdps": 3066330,
+          "maxIdps": 3066330,
+          "latestReportDate": "2025-02-01T00:00:00",
+          "operation": "Yemen conflict"
+        },
         {
           "year": 2023,
           "totalIdps": 2791603,
@@ -2529,7 +2547,7 @@
           "operation": "Yemen conflict"
         }
       ],
-      "lastUpdated": "2025-10-11T18:23:19.064Z",
+      "lastUpdated": "2025-11-06T16:11:40.044Z",
       "hasData": true
     },
     "ZMB": {
@@ -2546,7 +2564,7 @@
           "operation": "Drought Response in Southern Africa"
         }
       ],
-      "lastUpdated": "2025-10-11T18:23:19.353Z",
+      "lastUpdated": "2025-11-06T16:11:40.368Z",
       "hasData": true
     },
     "ZWE": {
@@ -2599,10 +2617,10 @@
           "operation": "Zimbabwe Countrywide monitoring"
         }
       ],
-      "lastUpdated": "2025-10-11T18:23:19.644Z",
+      "lastUpdated": "2025-11-06T16:11:40.696Z",
       "hasData": true
     }
   },
-  "lastFetched": "2025-10-11T18:23:19.798Z",
+  "lastFetched": "2025-11-06T16:11:40.848Z",
   "version": 1
 }
