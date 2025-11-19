@@ -409,42 +409,69 @@ body {
 /* Info Drawers - Left side collapsible panels */
 .info-drawer {
   position: fixed;
-  left: 6px;
-  width: 360px;
-  max-width: 360px;
   background: linear-gradient(135deg, #0a1929 0%, #1a2332 100%);
   border: 1px solid rgba(0, 188, 212, 0.2);
   box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.4);
   z-index: 900;
   transition: transform 0.3s ease-out;
   color: #ffffff;
-  border-radius: 8px;
-  padding-left: 42px; /* Add padding to avoid overlap with tabs */
 }
 
 .info-drawer-top {
+  left: 6px;
   bottom: 280px;
+  width: 360px;
+  max-width: 360px;
+  border-radius: 8px;
+  padding-left: 42px; /* Add padding to avoid overlap with tabs */
   transform: translateX(-100%);
 }
 
 .info-drawer-bottom {
-  bottom: 140px;
-  transform: translateX(-100%);
+  bottom: 48px;
+  width: calc(50vw - 160px);
+  border-radius: 8px 8px 0 0;
+  z-index: 901;
 }
 
-.info-drawer-open {
+.info-drawer-bottom.info-drawer-left {
+  left: 0;
+  transform: translateY(100%);
+}
+
+.info-drawer-bottom.info-drawer-right {
+  right: 0;
+  transform: translateY(100%);
+}
+
+.info-drawer-bottom.info-drawer-center {
+  left: 50%;
+  transform: translate(-50%, 100%);
+}
+
+.info-drawer-top.info-drawer-open {
   transform: translateX(0);
+}
+
+.info-drawer-bottom.info-drawer-left.info-drawer-open,
+.info-drawer-bottom.info-drawer-right.info-drawer-open {
+  transform: translateY(0);
+}
+
+.info-drawer-bottom.info-drawer-center.info-drawer-open {
+  transform: translate(-50%, 0);
+}
+
+.info-drawer-bottom.info-drawer-open .info-drawer-toggle {
+  background: rgba(0, 188, 212, 0.1);
+  color: #000000;
+  font-weight: 700;
 }
 
 .info-drawer-toggle {
   position: absolute;
-  right: -36px;
-  top: 0;
-  background: #00bcd4;
-  border: 1px solid #00bcd4;
-  border-left: none;
-  border-radius: 0 8px 8px 0;
-  padding: 10px 8px;
+  background: #ffffff;
+  border: 1px solid #ffffff;
   cursor: pointer;
   color: #000000;
   font-size: 13px;
@@ -452,18 +479,65 @@ body {
   display: flex;
   align-items: center;
   gap: 6px;
-  writing-mode: vertical-rl;
-  text-orientation: mixed;
   transition: all 0.2s ease;
   box-shadow: 4px 0 12px rgba(0, 0, 0, 0.3);
+}
+
+.info-drawer-top .info-drawer-toggle {
+  right: -36px;
+  top: 0;
+  border-left: none;
+  border-radius: 0 8px 8px 0;
+  padding: 10px 8px;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
   height: 100%;
   min-height: 140px;
 }
 
+.info-drawer-bottom .info-drawer-toggle {
+  position: fixed;
+  top: auto;
+  bottom: 0;
+  border: none;
+  border-radius: 0;
+  padding: 0 20px;
+  writing-mode: horizontal-tb;
+  white-space: nowrap;
+  height: 48px;
+  box-shadow: none;
+  z-index: 901;
+  background: transparent;
+  color: #000000;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.info-drawer-bottom .info-drawer-toggle:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.info-drawer-bottom.info-drawer-left .info-drawer-toggle {
+  left: 0;
+  transform: none;
+}
+
+.info-drawer-bottom.info-drawer-right .info-drawer-toggle {
+  right: 0;
+  left: auto;
+  transform: none;
+}
+
+.info-drawer-bottom.info-drawer-center .info-drawer-toggle {
+  left: 50%;
+  transform: translateX(-50%);
+}
+
 .info-drawer-toggle:hover {
-  background: #00acc1;
-  border-color: #00acc1;
-  box-shadow: 4px 0 16px rgba(0, 188, 212, 0.5);
+  background: #f0f0f0;
+  border-color: #f0f0f0;
+  box-shadow: 4px 0 16px rgba(255, 255, 255, 0.5);
 }
 
 .info-drawer-open .info-drawer-toggle {
@@ -478,13 +552,21 @@ body {
   box-shadow: 4px 0 16px rgba(0, 0, 0, 0.4);
 }
 
-.info-drawer-toggle svg {
+.info-drawer-top .info-drawer-toggle svg {
   writing-mode: horizontal-tb;
   transform: rotate(180deg);
 }
 
-.info-drawer-open .info-drawer-toggle svg {
+.info-drawer-top.info-drawer-open .info-drawer-toggle svg {
   transform: rotate(0deg);
+}
+
+.info-drawer-bottom .info-drawer-toggle svg {
+  transform: rotate(-90deg);
+}
+
+.info-drawer-bottom.info-drawer-open .info-drawer-toggle svg {
+  transform: rotate(90deg);
 }
 
 .info-drawer-content {
@@ -507,4 +589,10 @@ body {
 
 .info-drawer-content::-webkit-scrollbar-thumb:hover {
   background: rgba(0, 188, 212, 0.5);
+}
+
+/* Year selector dropdown options styling */
+select option {
+  background: #1a2332;
+  color: #ffffff;
 }

@@ -21,9 +21,128 @@ import StatisticsPanel from './StatisticsPanel';
 import TerminologyDrawer from './TerminologyDrawer';
 import TutorialDrawer from './TutorialDrawer';
 
+const AVAILABLE_YEARS = Array.from({ length: 25 }, (_, i) => 2024 - i);
+
+const BottomBarToggle = ({ 
+  isOpen, 
+  onClick, 
+  label 
+}: { 
+  isOpen: boolean; 
+  onClick: () => void; 
+  label: string; 
+}) => (
+  <button
+    onClick={onClick}
+    style={{
+      height: '48px',
+      padding: '0 20px',
+      background: isOpen ? 'rgba(0, 188, 212, 0.2)' : 'transparent',
+      border: 'none',
+      cursor: 'pointer',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '8px',
+      fontSize: '14px',
+      fontWeight: 600,
+      color: '#ffffff',
+      transition: 'all 0.2s ease'
+    }}
+    onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)'}
+    onMouseLeave={(e) => e.currentTarget.style.background = isOpen ? 'rgba(0, 188, 212, 0.2)' : 'transparent'}
+  >
+    <svg 
+      width="18" 
+      height="18" 
+      fill="none" 
+      stroke="currentColor" 
+      viewBox="0 0 24 24" 
+      strokeWidth={2}
+      style={{ 
+        transform: isOpen ? 'rotate(90deg)' : 'rotate(-90deg)', 
+        transition: 'transform 0.2s' 
+      }}
+    >
+      <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+    </svg>
+    <span>{label}</span>
+  </button>
+);
+
+const YearSelector = ({ 
+  year, 
+  onChange,
+  loading 
+}: { 
+  year: number; 
+  onChange: (year: number) => void;
+  loading: boolean;
+}) => (
+  <div className="flex items-center justify-center gap-4">
+    <span style={{ fontSize: '14px', color: '#ffffff', fontWeight: 600 }}>
+      Viewing Year:
+    </span>
+    <div style={{ position: 'relative', display: 'inline-block' }}>
+      <select
+        value={year}
+        onChange={(e) => onChange(Number(e.target.value))}
+        style={{
+          padding: '8px 36px 8px 16px',
+          borderRadius: '8px',
+          backgroundColor: 'rgba(255, 255, 255, 0.1)',
+          border: '2px solid rgba(0, 188, 212, 0.2)',
+          fontSize: '14px',
+          fontWeight: 600,
+          color: '#ffffff',
+          cursor: 'pointer',
+          WebkitAppearance: 'none',
+          MozAppearance: 'none',
+          appearance: 'none',
+          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)',
+          transition: 'all 0.2s ease',
+          outline: 'none'
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.15)';
+          e.currentTarget.style.borderColor = 'rgba(0, 188, 212, 0.4)';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+          e.currentTarget.style.borderColor = 'rgba(0, 188, 212, 0.2)';
+        }}
+      >
+        {AVAILABLE_YEARS.map(y => (
+          <option key={y} value={y}>{y}</option>
+        ))}
+      </select>
+      <div style={{
+        position: 'absolute',
+        right: '12px',
+        top: '50%',
+        transform: 'translateY(-50%)',
+        pointerEvents: 'none',
+        fontSize: '12px',
+        color: '#ffffff'
+      }}>
+        ▼
+      </div>
+    </div>
+    {loading && (
+      <div className="flex items-center gap-2">
+        <div className="animate-spin rounded-full h-4 w-4 border-2 border-cyan-400 border-t-transparent"></div>
+        <span style={{ fontSize: '13px', color: '#00bcd4', fontWeight: 600 }}>
+          Loading...
+        </span>
+      </div>
+    )}
+  </div>
+);
+
 export default function DisplacementGlobe() {
   const globeRef = useRef<any>();
   const [year, setYear] = useState<number>(GLOBE_CONFIG.year);
+  const [tutorialOpen, setTutorialOpen] = useState(true);
+  const [terminologyOpen, setTerminologyOpen] = useState(true);
   
   const [state, setState] = useState<GlobeState>({
     selectedCountry: null,
@@ -110,9 +229,8 @@ export default function DisplacementGlobe() {
     }));
   }, []);
 
-  const handlePolygonClick = useCallback((f: any) => {
-    const iso3 = f?.properties?.__iso3 || '';
-    const name = f?.properties?.__name || iso3;
+  // Unified helper to select and focus on a country
+  const selectCountry = useCallback((iso3: string, name: string, lat: number, lng: number) => {
     if (iso3 && iso3 !== 'UNK') {
       setState(prev => ({
         ...prev,
@@ -121,19 +239,39 @@ export default function DisplacementGlobe() {
         autoRotate: false,
       }));
       
-      try {
-        const [lat, lng] = polygonCentroid(f);
-        globeRef.current.pointOfView({ lat, lng, altitude: 0.8 }, 1000);
-      } catch {
-        // Failed to center on country
-      }
+      const dashboardWidth = 480;
+      const visibleWidth = window.innerWidth - dashboardWidth;
+      const centerOffset = (window.innerWidth - visibleWidth) / window.innerWidth;
+      
+      const lngOffset = 35 * centerOffset; // Approximate degrees adjustment
+      
+      globeRef.current.pointOfView({ lat, lng: lng + lngOffset, altitude: 0.8 }, 1000);
     }
   }, []);
+
+  const handlePolygonClick = useCallback((f: any) => {
+    const iso3 = f?.properties?.__iso3 || '';
+    const name = f?.properties?.__name || iso3;
+    
+    try {
+      const [lat, lng] = polygonCentroid(f);
+      selectCountry(iso3, name, lat, lng);
+    } catch {
+      // Failed to center on country
+    }
+  }, [selectCountry]);
 
   const handlePolygonHover = useCallback((f: any) => {
     setState(prev => ({ ...prev, hoveredPoly: f || null }));
     document.body.style.cursor = f ? 'pointer' : 'default';
   }, []);
+
+  const handleIdpPointClick = useCallback((point: any) => {
+    const idpPoint = point as IdpPoint;
+    if (idpPoint?.iso3) {
+      selectCountry(idpPoint.iso3, idpPoint.countryName, idpPoint.lat, idpPoint.lng);
+    }
+  }, [selectCountry]);
 
   const getArcColor = useCallback((d: any) => {
     const arc = d as ExtendedArc;
@@ -214,65 +352,32 @@ export default function DisplacementGlobe() {
           pointLabel={getIdpPointLabel}
           pointAltitude={0.01}
           pointResolution={12}
+          onPointClick={handleIdpPointClick}
         />
       </div>
 
-      <div className="absolute top-6 left-6 pointer-events-none" style={{ width: '360px', maxWidth: '90vw' }}>
-        <div className="pointer-events-auto bg-black/95 backdrop-blur-md rounded-lg p-6 shadow-2xl border-2 border-cyan-500/40 white-text">
-          <h1 className="text-3xl font-bold mb-2 drop-shadow-lg text-center">
+      <div className="absolute top-6 left-1/2 pointer-events-none" style={{ width: '600px', maxWidth: '90vw', transform: 'translateX(-50%)' }}>
+        <div 
+          className="pointer-events-auto white-text"
+          style={{
+            background: 'transparent',
+            padding: '12px 24px'
+          }}
+        >
+          <h1 
+            className="text-xl font-bold drop-shadow-lg text-center"
+            style={{
+              opacity: state.selectedCountry ? 0 : 1,
+              transition: 'opacity 0.3s ease'
+            }}
+          >
             Global Displacement Atlas
           </h1>
-          
-          {loading && hasInitialData && (
-            <div className="mb-6 p-4 bg-cyan-500/10 border border-cyan-500/30 rounded-xl">
-              <div className="flex items-center justify-center gap-3">
-                <div className="animate-spin rounded-full h-5 w-5 border-2 border-cyan-400 border-t-transparent"></div>
-                <span className="text-sm font-medium text-cyan-400">
-                  Loading {year} data...
-                </span>
-              </div>
-            </div>
-          )}
-          
-          <div style={{
-            marginTop: '24px',
-            paddingBottom: '24px',
-            borderBottom: '1px solid rgba(0, 188, 212, 0.1)',
-          }}>
-            <p style={{ 
-              fontSize: '13px', 
-              color: 'rgba(255, 255, 255, 0.7)', 
-              textAlign: 'center',
-              marginBottom: '12px',
-              lineHeight: '1.5'
-            }}>
-              Click any country to explore detailed migration data
-            </p>
-            <div className="flex items-center justify-center gap-2">
-              <span style={{ fontSize: '14px', color: 'rgba(255, 255, 255, 0.7)' }}>Viewing Year:</span>
-              <select
-                value={year}
-                onChange={(e) => setYear(Number(e.target.value))}
-                style={{
-                  padding: '4px 10px',
-                  borderRadius: '6px',
-                  background: '#ffffff',
-                  border: '1px solid rgba(0, 188, 212, 0.3)',
-                  fontSize: '13px',
-                  fontWeight: 600,
-                  color: '#000000',
-                  cursor: 'pointer',
-                }}
-              >
-                {[2024, 2023, 2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015, 2014, 2013, 2012, 2011, 2010, 2009, 2008, 2007, 2006, 2005, 2004, 2003, 2002, 2001, 2000].map(y => (
-                  <option key={y} value={y}>
-                    {y}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-
+        </div>
+      </div>
+      
+      <div className="absolute top-6 left-6 pointer-events-none" style={{ maxWidth: '300px' }}>
+        <div className="pointer-events-auto">
           <StatisticsPanel hoveredArc={state.hoveredArc} />
         </div>
       </div>
@@ -289,8 +394,42 @@ export default function DisplacementGlobe() {
         />
       )}
 
-      <TerminologyDrawer />
-      <TutorialDrawer />
+      {/* Full-width bottom bar with year selector and toggles */}
+      <div style={{
+        position: 'fixed',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        height: '48px',
+        background: 'linear-gradient(135deg, #0a1929 0%, #1a2332 100%)',
+        zIndex: 900,
+        pointerEvents: state.selectedCountry ? 'none' : 'auto',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: '0',
+        boxShadow: '0 -4px 20px rgba(0, 0, 0, 0.5)',
+        borderTop: '1px solid rgba(0, 188, 212, 0.2)',
+        opacity: state.selectedCountry ? 0 : 1,
+        transition: 'opacity 0.3s ease'
+      }}>
+        <BottomBarToggle 
+          isOpen={tutorialOpen} 
+          onClick={() => setTutorialOpen(!tutorialOpen)} 
+          label="How to Use This Tool" 
+        />
+        
+        <YearSelector year={year} onChange={setYear} loading={loading && hasInitialData} />
+        
+        <BottomBarToggle 
+          isOpen={terminologyOpen} 
+          onClick={() => setTerminologyOpen(!terminologyOpen)} 
+          label="Understanding the Terms" 
+        />
+      </div>
+
+      <TerminologyDrawer isOpen={terminologyOpen} />
+      <TutorialDrawer isOpen={tutorialOpen} />
     </div>
   );
 }

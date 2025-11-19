@@ -1,8 +1,12 @@
 import InfoDrawer from './InfoDrawer';
 
-export default function TutorialDrawer() {
+type TutorialDrawerProps = {
+  isOpen: boolean;
+};
+
+export default function TutorialDrawer({ isOpen }: TutorialDrawerProps) {
   return (
-    <InfoDrawer title="How to Use This Tool" position="top">
+    <InfoDrawer position="bottom" align="left" isOpen={isOpen}>
       <div style={{ padding: '24px' }}>
         <h3 style={{ 
           fontSize: '18px', 

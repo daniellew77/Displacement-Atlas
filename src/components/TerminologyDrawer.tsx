@@ -1,8 +1,12 @@
 import InfoDrawer from './InfoDrawer';
 
-export default function TerminologyDrawer() {
+type TerminologyDrawerProps = {
+  isOpen: boolean;
+};
+
+export default function TerminologyDrawer({ isOpen }: TerminologyDrawerProps) {
   return (
-    <InfoDrawer title="Understanding the Terms" position="bottom">
+    <InfoDrawer position="bottom" align="right" isOpen={isOpen}>
       <div style={{ padding: '24px' }}>
         <h3 style={{ 
           fontSize: '18px', 
