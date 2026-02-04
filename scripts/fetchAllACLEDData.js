@@ -1,9 +1,5 @@
 /**
  * Complete script to fetch ALL ACLED data for ALL countries and years
- * This will get every available conflict event from ACLED API
- * 
- * Supports incremental mode that downloads existing data from Vercel Blob,
- * merges new year data, and uploads back to blob storage.
  */
 
 // Load environment variables from .env file
@@ -20,7 +16,6 @@ const __dirname = path.dirname(__filename);
 
 const ACLED_API_BASE = 'https://acleddata.com/api/acled/read';
 
-// Blob storage configuration
 const BLOB_TOKEN = process.env.BLOB_READ_WRITE_TOKEN || '';
 const BLOB_URLS_PATH = path.join(__dirname, '..', 'src', 'data', 'blob-urls.json');
 
