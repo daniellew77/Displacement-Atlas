@@ -69,7 +69,7 @@ async function uploadToBlob(iso3, data) {
     const blob = await put(`acled-data/${iso3}.json`, JSON.stringify(data, null, 2), {
       access: 'public',
       token: BLOB_TOKEN,
-      addRandomSuffix: false,
+      allowOverwrite: true,
     });
     return blob.url;
   } catch (error) {
