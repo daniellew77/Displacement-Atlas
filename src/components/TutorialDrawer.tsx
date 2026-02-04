@@ -1,3 +1,4 @@
+import { getYearRangeLabel } from '../utils/year.utils';
 import InfoDrawer from './InfoDrawer';
 
 type TutorialDrawerProps = {
@@ -8,9 +9,9 @@ export default function TutorialDrawer({ isOpen }: TutorialDrawerProps) {
   return (
     <InfoDrawer position="bottom" align="left" isOpen={isOpen}>
       <div style={{ padding: '24px' }}>
-        <h3 style={{ 
-          fontSize: '18px', 
-          fontWeight: 600, 
+        <h3 style={{
+          fontSize: '18px',
+          fontWeight: 600,
           marginBottom: '20px',
           color: '#00bcd4'
         }}>
@@ -19,65 +20,65 @@ export default function TutorialDrawer({ isOpen }: TutorialDrawerProps) {
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           <div>
-            <div style={{ 
-              fontSize: '15px', 
-              fontWeight: 600, 
+            <div style={{
+              fontSize: '15px',
+              fontWeight: 600,
               marginBottom: '8px',
               color: '#ffffff',
               display: 'flex',
               alignItems: 'center',
               gap: '8px'
             }}>
-              <span style={{ 
-                background: '#00bcd4', 
-                color: '#000', 
-                borderRadius: '50%', 
-                width: '24px', 
-                height: '24px', 
-                display: 'inline-flex', 
-                alignItems: 'center', 
+              <span style={{
+                background: '#00bcd4',
+                color: '#000',
+                borderRadius: '50%',
+                width: '24px',
+                height: '24px',
+                display: 'inline-flex',
+                alignItems: 'center',
                 justifyContent: 'center',
                 fontSize: '12px',
                 fontWeight: 700
               }}>1</span>
               Select a Year
             </div>
-            <div style={{ 
-              fontSize: '14px', 
+            <div style={{
+              fontSize: '14px',
               lineHeight: '1.6',
               color: 'rgba(255, 255, 255, 0.8)',
               marginLeft: '32px'
             }}>
-              Use the year selector to explore displacement data from 2000-2024. The globe automatically updates to show migration flows and IDP data for your selected year.
+              Use the year selector to explore displacement data from {getYearRangeLabel()}. The globe automatically updates to show migration flows and IDP data for your selected year.
             </div>
           </div>
 
           <div>
-            <div style={{ 
-              fontSize: '15px', 
-              fontWeight: 600, 
+            <div style={{
+              fontSize: '15px',
+              fontWeight: 600,
               marginBottom: '8px',
               color: '#ffffff',
               display: 'flex',
               alignItems: 'center',
               gap: '8px'
             }}>
-              <span style={{ 
-                background: '#00bcd4', 
-                color: '#000', 
-                borderRadius: '50%', 
-                width: '24px', 
-                height: '24px', 
-                display: 'inline-flex', 
-                alignItems: 'center', 
+              <span style={{
+                background: '#00bcd4',
+                color: '#000',
+                borderRadius: '50%',
+                width: '24px',
+                height: '24px',
+                display: 'inline-flex',
+                alignItems: 'center',
                 justifyContent: 'center',
                 fontSize: '12px',
                 fontWeight: 700
               }}>2</span>
               Click Any Country
             </div>
-            <div style={{ 
-              fontSize: '14px', 
+            <div style={{
+              fontSize: '14px',
               lineHeight: '1.6',
               color: 'rgba(255, 255, 255, 0.8)',
               marginLeft: '32px'
@@ -87,31 +88,31 @@ export default function TutorialDrawer({ isOpen }: TutorialDrawerProps) {
           </div>
 
           <div>
-            <div style={{ 
-              fontSize: '15px', 
-              fontWeight: 600, 
+            <div style={{
+              fontSize: '15px',
+              fontWeight: 600,
               marginBottom: '8px',
               color: '#ffffff',
               display: 'flex',
               alignItems: 'center',
               gap: '8px'
             }}>
-              <span style={{ 
-                background: '#00bcd4', 
-                color: '#000', 
-                borderRadius: '50%', 
-                width: '24px', 
-                height: '24px', 
-                display: 'inline-flex', 
-                alignItems: 'center', 
+              <span style={{
+                background: '#00bcd4',
+                color: '#000',
+                borderRadius: '50%',
+                width: '24px',
+                height: '24px',
+                display: 'inline-flex',
+                alignItems: 'center',
                 justifyContent: 'center',
                 fontSize: '12px',
                 fontWeight: 700
               }}>3</span>
               Immigration vs Emigration
             </div>
-            <div style={{ 
-              fontSize: '14px', 
+            <div style={{
+              fontSize: '14px',
               lineHeight: '1.6',
               color: 'rgba(255, 255, 255, 0.8)',
               marginLeft: '32px'
@@ -121,31 +122,31 @@ export default function TutorialDrawer({ isOpen }: TutorialDrawerProps) {
           </div>
 
           <div>
-            <div style={{ 
-              fontSize: '15px', 
-              fontWeight: 600, 
+            <div style={{
+              fontSize: '15px',
+              fontWeight: 600,
               marginBottom: '8px',
               color: '#ffffff',
               display: 'flex',
               alignItems: 'center',
               gap: '8px'
             }}>
-              <span style={{ 
-                background: '#00bcd4', 
-                color: '#000', 
-                borderRadius: '50%', 
-                width: '24px', 
-                height: '24px', 
-                display: 'inline-flex', 
-                alignItems: 'center', 
+              <span style={{
+                background: '#00bcd4',
+                color: '#000',
+                borderRadius: '50%',
+                width: '24px',
+                height: '24px',
+                display: 'inline-flex',
+                alignItems: 'center',
                 justifyContent: 'center',
                 fontSize: '12px',
                 fontWeight: 700
               }}>4</span>
               IDP & Conflict Data
             </div>
-            <div style={{ 
-              fontSize: '14px', 
+            <div style={{
+              fontSize: '14px',
               lineHeight: '1.6',
               color: 'rgba(255, 255, 255, 0.8)',
               marginLeft: '32px'

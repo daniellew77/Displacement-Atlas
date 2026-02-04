@@ -30,7 +30,7 @@ jobs:
         run: |
           git config user.name "GitHub Actions Bot"
           git config user.email "actions@github.com"
-          git add public/unhcr-cache.json public/unrwa-cache.json src/data/unhcr-data.json src/data/unrwa-data.json
+          git add public/unhcr-cache.json public/unrwa-cache.json
           git diff --quiet --exit-code || (git commit -m "🔄 chore(data): Auto-update UNHCR & UNRWA data - $(date +'%Y')" && git push)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

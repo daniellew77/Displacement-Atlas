@@ -1,5 +1,7 @@
+import { getLatestDataYear } from '../utils/year.utils';
+
 export const GLOBE_CONFIG = {
-  year: 2024,
+  year: getLatestDataYear(),
   initialPOV: { lat: 20, lng: 0, altitude: 2.5 },
   autoRotateSpeed: 0.1,
   arcConfig: {

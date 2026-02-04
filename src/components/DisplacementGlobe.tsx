@@ -4,13 +4,14 @@ import { useGlobalFlows } from '../hooks/useUNHCRData';
 import { usePolygons } from '../hooks/usePolygons';
 import { useIdpPoints } from '../hooks/useIdpPoints';
 import { FlowProcessor, getCoordinateMap } from '../lib';
-import { 
-  polygonCentroid, 
-  hexToRgba, 
-  getVolumeStyle, 
-  createTooltip 
+import {
+  polygonCentroid,
+  hexToRgba,
+  getVolumeStyle,
+  createTooltip
 } from '../utils/globe-helpers';
 import { createIdpTooltip, getIdpPointColor } from '../utils/idp-points';
+import { getAvailableYears } from '../utils/year.utils';
 import { GLOBE_CONFIG } from '../config/globe.config';
 import type { ExtendedArc, GlobeState } from '../types/globe.types';
 import type { IdpPoint } from '../utils/idp-points';
@@ -21,16 +22,16 @@ import StatisticsPanel from './StatisticsPanel';
 import TerminologyDrawer from './TerminologyDrawer';
 import TutorialDrawer from './TutorialDrawer';
 
-const AVAILABLE_YEARS = Array.from({ length: 25 }, (_, i) => 2024 - i);
+const AVAILABLE_YEARS = getAvailableYears();
 
-const BottomBarToggle = ({ 
-  isOpen, 
-  onClick, 
-  label 
-}: { 
-  isOpen: boolean; 
-  onClick: () => void; 
-  label: string; 
+const BottomBarToggle = ({
+  isOpen,
+  onClick,
+  label
+}: {
+  isOpen: boolean;
+  onClick: () => void;
+  label: string;
 }) => (
   <button
     onClick={onClick}
@@ -51,16 +52,16 @@ const BottomBarToggle = ({
     onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)'}
     onMouseLeave={(e) => e.currentTarget.style.background = isOpen ? 'rgba(0, 188, 212, 0.2)' : 'transparent'}
   >
-    <svg 
-      width="18" 
-      height="18" 
-      fill="none" 
-      stroke="currentColor" 
-      viewBox="0 0 24 24" 
+    <svg
+      width="18"
+      height="18"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
       strokeWidth={2}
-      style={{ 
-        transform: isOpen ? 'rotate(90deg)' : 'rotate(-90deg)', 
-        transition: 'transform 0.2s' 
+      style={{
+        transform: isOpen ? 'rotate(90deg)' : 'rotate(-90deg)',
+        transition: 'transform 0.2s'
       }}
     >
       <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
@@ -69,12 +70,12 @@ const BottomBarToggle = ({
   </button>
 );
 
-const YearSelector = ({ 
-  year, 
+const YearSelector = ({
+  year,
   onChange,
-  loading 
-}: { 
-  year: number; 
+  loading
+}: {
+  year: number;
   onChange: (year: number) => void;
   loading: boolean;
 }) => (
@@ -143,7 +144,7 @@ export default function DisplacementGlobe() {
   const [year, setYear] = useState<number>(GLOBE_CONFIG.year);
   const [tutorialOpen, setTutorialOpen] = useState(true);
   const [terminologyOpen, setTerminologyOpen] = useState(true);
-  
+
   const [state, setState] = useState<GlobeState>({
     selectedCountry: null,
     selectedCountryName: null,
@@ -160,7 +161,7 @@ export default function DisplacementGlobe() {
   const polygons = usePolygons();
   const { points: idpPoints } = useIdpPoints(year, polygons);
   const [hasInitialData, setHasInitialData] = useState(false);
-  
+
   useEffect(() => {
     if (!loading && flows.length > 0) {
       setHasInitialData(true);
@@ -173,7 +174,7 @@ export default function DisplacementGlobe() {
 
   const arcs = useMemo(() => {
     if (!flows.length || !coordinates.size) return [];
-    
+
     const baseArcs = FlowProcessor.toGlobeArcs(flows, coordinates, {
       ...GLOBE_CONFIG.arcConfig,
       topN: 300,
@@ -194,7 +195,7 @@ export default function DisplacementGlobe() {
     if (!state.selectedCountry) return arcs.slice(0, 100);
     return arcs.filter(arc => arc.asylumIso === state.selectedCountry);
   }, [arcs, state.selectedCountry]);
-  
+
   const outgoingOnlyArcs = useMemo(() => {
     if (!state.selectedCountry) return arcs.slice(0, 100);
     return arcs.filter(arc => arc.originIso === state.selectedCountry);
@@ -238,13 +239,13 @@ export default function DisplacementGlobe() {
         selectedCountryName: name,
         autoRotate: false,
       }));
-      
+
       const dashboardWidth = 480;
       const visibleWidth = window.innerWidth - dashboardWidth;
       const centerOffset = (window.innerWidth - visibleWidth) / window.innerWidth;
-      
+
       const lngOffset = 35 * centerOffset; // Approximate degrees adjustment
-      
+
       globeRef.current.pointOfView({ lat, lng: lng + lngOffset, altitude: 0.8 }, 1000);
     }
   }, []);
@@ -252,7 +253,7 @@ export default function DisplacementGlobe() {
   const handlePolygonClick = useCallback((f: any) => {
     const iso3 = f?.properties?.__iso3 || '';
     const name = f?.properties?.__name || iso3;
-    
+
     try {
       const [lat, lng] = polygonCentroid(f);
       selectCountry(iso3, name, lat, lng);
@@ -315,7 +316,7 @@ export default function DisplacementGlobe() {
           height={window.innerHeight}
           globeImageUrl="//unpkg.com/three-globe/example/img/earth-blue-marble.jpg"
           backgroundImageUrl="//unpkg.com/three-globe/example/img/night-sky.png"
-          
+
           arcsData={state.flowDirection === 'incoming' ? incomingOnlyArcs : outgoingOnlyArcs}
           arcStartLat="startLat"
           arcStartLng="startLng"
@@ -329,12 +330,12 @@ export default function DisplacementGlobe() {
           arcDashAnimateTime={10000}
           arcsTransitionDuration={600}
           onArcHover={(arc: any) => setState(prev => ({ ...prev, hoveredArc: arc as ExtendedArc | null }))}
-          
+
           atmosphereColor={GLOBE_CONFIG.colors.atmosphere}
           atmosphereAltitude={0.2}
           enablePointerInteraction={true}
           onGlobeClick={handleGlobeClick}
-          
+
           polygonsData={state.polygons}
           polygonCapColor={(f: any) => (f === state.hoveredPoly ? 'rgba(0, 188, 212, 0.4)' : 'rgba(255,255,255,0.02)')}
           polygonSideColor={() => 'rgba(0,0,0,0)'}
@@ -343,7 +344,7 @@ export default function DisplacementGlobe() {
           polygonLabel={getPolygonLabel}
           onPolygonHover={handlePolygonHover}
           onPolygonClick={handlePolygonClick}
-          
+
           pointsData={idpPoints}
           pointLat="lat"
           pointLng="lng"
@@ -357,14 +358,14 @@ export default function DisplacementGlobe() {
       </div>
 
       <div className="absolute top-6 left-1/2 pointer-events-none" style={{ width: '600px', maxWidth: '90vw', transform: 'translateX(-50%)' }}>
-        <div 
+        <div
           className="pointer-events-auto white-text"
           style={{
             background: 'transparent',
             padding: '12px 24px'
           }}
         >
-          <h1 
+          <h1
             className="text-xl font-bold drop-shadow-lg text-center"
             style={{
               opacity: state.selectedCountry ? 0 : 1,
@@ -375,7 +376,7 @@ export default function DisplacementGlobe() {
           </h1>
         </div>
       </div>
-      
+
       <div className="absolute top-6 left-6 pointer-events-none" style={{ maxWidth: '300px' }}>
         <div className="pointer-events-auto">
           <StatisticsPanel hoveredArc={state.hoveredArc} />
@@ -413,18 +414,18 @@ export default function DisplacementGlobe() {
         opacity: state.selectedCountry ? 0 : 1,
         transition: 'opacity 0.3s ease'
       }}>
-        <BottomBarToggle 
-          isOpen={tutorialOpen} 
-          onClick={() => setTutorialOpen(!tutorialOpen)} 
-          label="How to Use This Tool" 
+        <BottomBarToggle
+          isOpen={tutorialOpen}
+          onClick={() => setTutorialOpen(!tutorialOpen)}
+          label="How to Use This Tool"
         />
-        
+
         <YearSelector year={year} onChange={setYear} loading={loading && hasInitialData} />
-        
-        <BottomBarToggle 
-          isOpen={terminologyOpen} 
-          onClick={() => setTerminologyOpen(!terminologyOpen)} 
-          label="Understanding the Terms" 
+
+        <BottomBarToggle
+          isOpen={terminologyOpen}
+          onClick={() => setTerminologyOpen(!terminologyOpen)}
+          label="Understanding the Terms"
         />
       </div>
 

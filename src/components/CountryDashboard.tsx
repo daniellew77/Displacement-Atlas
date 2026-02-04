@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { useIncomingFlows, useOutgoingFlows } from '../hooks/useUNHCRData';
 import { loadIOMCache } from '../utils/iom-processor';
 import { useACLED } from '../hooks/useACLED';
+import { getAvailableYears } from '../utils/year.utils';
 import ACLEDSection from './ACLEDSection';
 
 
@@ -15,7 +16,7 @@ type Props = {
   onYearChange?: (year: number) => void;
 };
 
-const AVAILABLE_YEARS = [2024, 2023, 2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015, 2014, 2013, 2012, 2011, 2010, 2009, 2008, 2007, 2006, 2005, 2004, 2003, 2002, 2001, 2000];
+const AVAILABLE_YEARS = getAvailableYears();
 
 function Stat({ title, value }: { title: string; value: number }) {
   return (
@@ -32,14 +33,14 @@ function Stat({ title, value }: { title: string; value: number }) {
 
 export default function CountryDashboard({ iso3, year: initialYear, onClose, asylumName, direction, onToggleDirection, onYearChange }: Props) {
   const [selectedYear, setSelectedYear] = useState(initialYear);
-  
+
   const handleYearChange = (year: number) => {
     setSelectedYear(year);
     if (onYearChange) {
       onYearChange(year);
     }
   };
-  
+
   const incomingData = useIncomingFlows(iso3, selectedYear);
   const outgoingData = useOutgoingFlows(iso3, selectedYear);
   const { flows, loading, error } = direction === 'incoming' ? incomingData : outgoingData;
@@ -50,10 +51,10 @@ export default function CountryDashboard({ iso3, year: initialYear, onClose, asy
   const idpData = useMemo(() => {
     const cache = loadIOMCache();
     if (!cache) return null;
-    
+
     const countryData = cache.idpData.get(iso3);
     if (!countryData) return null;
-    
+
     const yearData = countryData.yearlyData.find(yd => yd.year === selectedYear);
     return yearData || null;
   }, [iso3, selectedYear]);
@@ -120,8 +121,8 @@ export default function CountryDashboard({ iso3, year: initialYear, onClose, asy
                 </select>
               </div>
             </div>
-            
-            <button 
+
+            <button
               onClick={onClose}
               className="dashboard-close-button"
             >
@@ -153,13 +154,13 @@ export default function CountryDashboard({ iso3, year: initialYear, onClose, asy
               <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-cyan-500"></div>
             </div>
           )}
-          
+
           {error && (
             <div className="dashboard-error">
               Failed to load data: {String(error.message || error)}
             </div>
           )}
-          
+
           {!loading && !error && groupedSorted.length === 0 && (
             <div className="dashboard-empty">
               {emptyText}
@@ -188,7 +189,7 @@ export default function CountryDashboard({ iso3, year: initialYear, onClose, asy
                   </div>
                 )}
               </div>
-              
+
               {idpData && (
                 <div className="dashboard-data-note" style={{ marginTop: '12px' }}>
                   <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2} style={{ flexShrink: 0 }}>
@@ -198,7 +199,7 @@ export default function CountryDashboard({ iso3, year: initialYear, onClose, asy
                 </div>
               )}
 
-              <ACLEDSection 
+              <ACLEDSection
                 summary={acledData.summary}
                 loading={acledData.loading}
                 error={acledData.error}
