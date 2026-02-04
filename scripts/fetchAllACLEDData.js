@@ -30,11 +30,11 @@ if (!ACLED_USERNAME || !ACLED_PASSWORD) {
 }
 
 /**
- * Get initial ACLED credentials using username/password
+ * Get initial ACLED credentials using username/password OAuth flow
  */
 async function getInitialACLEDCredentials() {
-  console.log('Getting ACLED credentials...');
-  
+  console.log('Getting ACLED credentials via OAuth...');
+
   const body = new URLSearchParams({
     username: ACLED_USERNAME,
     password: ACLED_PASSWORD,
@@ -42,49 +42,71 @@ async function getInitialACLEDCredentials() {
     client_id: 'acled',
   });
 
-  const response = await fetch('https://acleddata.com/oauth/token', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: body.toString(),
-  });
+  try {
+    const response = await fetch('https://acleddata.com/oauth/token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Accept': 'application/json',
+      },
+      body: body.toString(),
+    });
 
-  if (!response.ok) {
-    const errorText = await response.text();
-    console.error(`Failed to get credentials: ${response.status} - ${errorText}`);
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error(`Failed to get credentials: ${response.status} - ${errorText.substring(0, 200)}`);
+      return false;
+    }
+
+    const data = await response.json();
+    ACLED_ACCESS_TOKEN = data.access_token;
+    ACLED_REFRESH_TOKEN = data.refresh_token;
+    console.log('OAuth authentication successful');
+    return true;
+  } catch (error) {
+    console.error(`OAuth request failed: ${error.message}`);
     return false;
   }
-
-  const data = await response.json();
-  ACLED_ACCESS_TOKEN = data.access_token;
-  ACLED_REFRESH_TOKEN = data.refresh_token;
-  console.log('Authentication successful');
-  return true;
 }
 
 /**
- * Refresh ACLED access token
+ * Refresh ACLED access token using refresh token
  */
 async function refreshACLEDToken() {
+  console.log('Attempting to refresh ACLED access token...');
+
   const body = new URLSearchParams({
     refresh_token: ACLED_REFRESH_TOKEN,
     grant_type: 'refresh_token',
     client_id: 'acled',
   });
 
-  const response = await fetch('https://acleddata.com/oauth/token', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: body.toString(),
-  });
+  try {
+    const response = await fetch('https://acleddata.com/oauth/token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Accept': 'application/json',
+      },
+      body: body.toString(),
+    });
 
-  if (!response.ok) {
-    console.log('Token refresh failed, attempting re-login...');
+    if (!response.ok) {
+      console.log('Token refresh failed, attempting full re-login...');
+      return await getInitialACLEDCredentials();
+    }
+
+    const data = await response.json();
+    ACLED_ACCESS_TOKEN = data.access_token;
+    if (data.refresh_token) {
+      ACLED_REFRESH_TOKEN = data.refresh_token;
+    }
+    console.log('Token refresh successful');
+    return true;
+  } catch (error) {
+    console.error(`Token refresh request failed: ${error.message}`);
     return await getInitialACLEDCredentials();
   }
-
-  const data = await response.json();
-  ACLED_ACCESS_TOKEN = data.access_token;
-  return true;
 }
 
 // Common countries that are likely to have conflict data
@@ -327,6 +349,7 @@ async function fetchCountryYearEvents(iso3, year) {
         'civilian_targeting'
       ].join('|');
 
+      // Use Bearer token authentication
       const params = new URLSearchParams({
         country: countryName,
         year: year.toString(),
@@ -336,45 +359,40 @@ async function fetchCountryYearEvents(iso3, year) {
       });
 
       const url = `${ACLED_API_BASE}?${params.toString()}`;
-      
+
       const response = await fetch(url, {
         headers: {
           'Authorization': `Bearer ${ACLED_ACCESS_TOKEN}`,
-          'Content-Type': 'application/json',
+          'Accept': 'application/json',
         },
       });
 
       if (!response.ok) {
         if (response.status === 401) {
-          console.log(`  Authentication failed, refreshing token...`);
+          console.log(`  Authentication failed, attempting token refresh...`);
           const refreshSuccess = await refreshACLEDToken();
           if (refreshSuccess) {
             // Retry the request with new token
             const retryResponse = await fetch(url, {
               headers: {
                 'Authorization': `Bearer ${ACLED_ACCESS_TOKEN}`,
-                'Content-Type': 'application/json',
+                'Accept': 'application/json',
               },
             });
-            
             if (retryResponse.ok) {
               const retryData = await retryResponse.json();
               return retryData.data || [];
-            } else {
-              console.error(`  Retry failed: HTTP ${retryResponse.status}`);
-              return [];
             }
-          } else {
-            console.error(`  Token refresh failed`);
-            return [];
           }
+          console.error(`  Authentication failed after refresh attempt.`);
+          return [];
         } else if (response.status === 403) {
           console.log(`  Rate limited, waiting...`);
-          // Wait longer before continuing
           await new Promise(resolve => setTimeout(resolve, 5000));
           return [];
         }
-        console.error(`  HTTP ${response.status}`);
+        const errorText = await response.text();
+        console.error(`  HTTP ${response.status}: ${errorText.substring(0, 200)}`);
         return [];
       }
 
@@ -386,7 +404,7 @@ async function fetchCountryYearEvents(iso3, year) {
       } else {
         allEvents.push(...events);
         console.log(`    Page ${page}: ${events.length} events (Total: ${allEvents.length})`);
-        
+
         if (events.length < pageSize) {
           hasMoreData = false;
         } else {
@@ -409,61 +427,64 @@ async function fetchCountryYearEvents(iso3, year) {
 
 /**
  * Test ACLED authentication before starting the full fetch
+ * Uses OAuth Bearer token authentication
  */
 async function testACLEDAuth() {
   console.log('Testing ACLED authentication...');
-  
-  if (!ACLED_ACCESS_TOKEN || !ACLED_REFRESH_TOKEN) {
-    const loginSuccess = await getInitialACLEDCredentials();
-    if (!loginSuccess) return false;
-  }
-  
-  const testUrl = `${ACLED_API_BASE}?country=Syria&year=2024&limit=1&fields=event_id_cnty`;
-  const response = await fetch(testUrl, {
-    headers: {
-      'Authorization': `Bearer ${ACLED_ACCESS_TOKEN}`,
-      'Content-Type': 'application/json',
-    },
+
+  const loginSuccess = await getInitialACLEDCredentials();
+  if (!loginSuccess) return false;
+
+  // Test with a simple query using Bearer token authentication
+  const testParams = new URLSearchParams({
+    country: 'Syria',
+    year: '2024',
+    limit: '1',
+    fields: 'event_id_cnty',
   });
 
-  if (response.ok) {
-    console.log('Authentication successful\n');
-    return true;
-  }
-  
-  if (response.status === 401) {
-    const refreshSuccess = await refreshACLEDToken();
-    if (!refreshSuccess) return false;
-    
-    const retryResponse = await fetch(testUrl, {
+  const testUrl = `${ACLED_API_BASE}?${testParams.toString()}`;
+
+  try {
+    const response = await fetch(testUrl, {
       headers: {
         'Authorization': `Bearer ${ACLED_ACCESS_TOKEN}`,
-        'Content-Type': 'application/json',
+        'Accept': 'application/json',
       },
     });
-    
-    if (retryResponse.ok) {
-      console.log('Authentication successful after refresh\n');
-      return true;
+
+    if (response.ok) {
+      const data = await response.json();
+      if (data.success !== false) {
+        console.log('Authentication successful\n');
+        return true;
+      } else {
+        console.error(`ACLED API error: ${data.message || 'Unknown error'}`);
+        return false;
+      }
     }
+
+    const errorText = await response.text();
+    console.error(`Authentication test failed: ${response.status} - ${errorText.substring(0, 200)}`);
+    return false;
+  } catch (error) {
+    console.error(`Authentication test error: ${error.message}`);
+    return false;
   }
-  
-  console.error(`Authentication failed: ${response.status}`);
-  return false;
 }
 
 async function fetchAllACLEDData() {
   console.log('Starting ACLED data fetch\n');
-  
+
   const authSuccess = await testACLEDAuth();
   if (!authSuccess) {
     console.error('Authentication failed. Please check credentials.');
     process.exit(1);
   }
-  
+
   const totalCombinations = COMMON_COUNTRIES.length * YEARS.length;
   console.log(`Countries: ${COMMON_COUNTRIES.length}`);
-  console.log(`Years: ${YEARS[0]}-${YEARS[YEARS.length-1]}`);
+  console.log(`Years: ${YEARS[0]}-${YEARS[YEARS.length - 1]}`);
   console.log(`Total combinations: ${totalCombinations}`);
   console.log(`Started: ${new Date().toLocaleTimeString()}\n`);
 
@@ -477,11 +498,11 @@ async function fetchAllACLEDData() {
 
   for (const iso3 of COMMON_COUNTRIES) {
     acledData[iso3] = {};
-    
+
     for (const year of YEARS) {
       try {
         const events = await fetchCountryYearEvents(iso3, year);
-        
+
         // Only save the year data if it has events
         if (events.length > 0) {
           acledData[iso3][year] = events;
@@ -495,25 +516,25 @@ async function fetchAllACLEDData() {
         console.error(`Failed to fetch ${iso3} ${year}:`, error.message);
         failedFetches++;
       }
-      
+
       completedCombinations++;
-      
+
       // Show progress every 50 combinations
       if (completedCombinations % 50 === 0 || completedCombinations === totalCombinations) {
         const elapsedTime = Date.now() - startTime;
         const progressPercent = ((completedCombinations / totalCombinations) * 100).toFixed(1);
         const avgTimePerCombination = elapsedTime / completedCombinations;
         const remainingMinutes = Math.round(((totalCombinations - completedCombinations) * avgTimePerCombination) / 60000);
-        
+
         console.log(`\nProgress: ${completedCombinations}/${totalCombinations} (${progressPercent}%)`);
         console.log(`Success: ${successfulFetches}, No Data: ${successfulFetchesWithNoData}, Failed: ${failedFetches}`);
         console.log(`Total Events: ${totalEvents.toLocaleString()}`);
         console.log(`Elapsed: ${Math.round(elapsedTime / 60000)}min, Est. remaining: ~${remainingMinutes}min\n`);
       }
-      
+
       await new Promise(resolve => setTimeout(resolve, 500));
     }
-    
+
     const countryProgress = ((COMMON_COUNTRIES.indexOf(iso3) + 1) / COMMON_COUNTRIES.length * 100).toFixed(1);
     console.log(`Completed ${iso3}: ${countryProgress}% of countries\n`);
   }
@@ -543,16 +564,16 @@ async function fetchAllACLEDData() {
   if (!fs.existsSync(cacheDir)) {
     fs.mkdirSync(cacheDir, { recursive: true });
   }
-  
+
   let savedCountries = 0;
   let mergedCountries = 0;
   let newCountries = 0;
   const availableCountries = [];
-  
+
   for (const [iso3, yearlyData] of Object.entries(cacheData.acledData)) {
     if (Object.keys(yearlyData).length > 0) {
       const countryPath = path.join(cacheDir, `${iso3}.json`);
-      
+
       // Load existing cache file if it exists
       let existingData = null;
       if (fs.existsSync(countryPath)) {
@@ -566,31 +587,31 @@ async function fetchAllACLEDData() {
       } else {
         newCountries++;
       }
-      
+
       // Merge yearly data (new data takes precedence)
       const mergedYearlyData = existingData ? { ...existingData.yearlyData, ...yearlyData } : yearlyData;
-      
+
       const countryData = {
         iso3,
         yearlyData: mergedYearlyData,
         lastFetched: cacheData.lastFetched,
         version: cacheData.version
       };
-      
+
       fs.writeFileSync(countryPath, JSON.stringify(countryData, null, 2));
       availableCountries.push(iso3);
       savedCountries++;
-      
+
       if (savedCountries % 10 === 0) {
         console.log(`  Saved ${savedCountries} countries...`);
       }
     }
   }
-  
+
   console.log(`\nMerge Summary:`);
   console.log(`  Merged with existing: ${mergedCountries}`);
   console.log(`  New countries: ${newCountries}`);
-  
+
   // Save metadata
   const metadata = {
     lastFetched: cacheData.lastFetched,
@@ -601,13 +622,13 @@ async function fetchAllACLEDData() {
     availableCountries: availableCountries.sort(),
     compressionRatio: 0
   };
-  
+
   const metadataPath = path.join(cacheDir, 'metadata.json');
   fs.writeFileSync(metadataPath, JSON.stringify(metadata, null, 2));
-  
+
   console.log(`\nSaved ${savedCountries} country files to: ${cacheDir}/`);
   console.log(`Metadata saved: ${metadataPath}`);
-  
+
   return cacheData;
 }
 

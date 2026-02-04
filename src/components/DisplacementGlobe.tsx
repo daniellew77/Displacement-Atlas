@@ -233,6 +233,11 @@ export default function DisplacementGlobe() {
   // Unified helper to select and focus on a country
   const selectCountry = useCallback((iso3: string, name: string, lat: number, lng: number) => {
     if (iso3 && iso3 !== 'UNK') {
+      // Close the tutorial and terminology drawers when selecting a country
+      // since the bottom bar toggle buttons are hidden when a country is selected
+      setTutorialOpen(false);
+      setTerminologyOpen(false);
+
       setState(prev => ({
         ...prev,
         selectedCountry: iso3,
