@@ -1,6 +1,9 @@
 /**
  * Complete script to fetch ALL ACLED data for ALL countries and years
  * This will get every available conflict event from ACLED API
+ * 
+ * Supports incremental mode that downloads existing data from Vercel Blob,
+ * merges new year data, and uploads back to blob storage.
  */
 
 // Load environment variables from .env file
@@ -8,6 +11,7 @@ import dotenv from 'dotenv';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { put } from '@vercel/blob';
 
 dotenv.config();
 
@@ -15,6 +19,68 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const ACLED_API_BASE = 'https://acleddata.com/api/acled/read';
+
+// Blob storage configuration
+const BLOB_TOKEN = process.env.BLOB_READ_WRITE_TOKEN || '';
+const BLOB_URLS_PATH = path.join(__dirname, '..', 'src', 'data', 'blob-urls.json');
+
+/**
+ * Load blob URLs mapping from the committed JSON file
+ */
+function loadBlobUrls() {
+  try {
+    if (fs.existsSync(BLOB_URLS_PATH)) {
+      const content = fs.readFileSync(BLOB_URLS_PATH, 'utf8');
+      return JSON.parse(content);
+    }
+  } catch (error) {
+    console.log('Could not load blob-urls.json:', error.message);
+  }
+  return { urls: {} };
+}
+
+/**
+ * Download existing country data from Vercel Blob storage
+ */
+async function downloadFromBlob(iso3) {
+  const blobUrls = loadBlobUrls();
+  const url = blobUrls.urls?.[`${iso3}.json`];
+
+  if (!url) {
+    return null;
+  }
+
+  try {
+    const response = await fetch(url);
+    if (response.ok) {
+      return await response.json();
+    }
+  } catch (error) {
+    console.log(`  Could not download ${iso3} from blob: ${error.message}`);
+  }
+  return null;
+}
+
+/**
+ * Upload country data to Vercel Blob storage
+ */
+async function uploadToBlob(iso3, data) {
+  if (!BLOB_TOKEN) {
+    console.log(`  Skipping blob upload for ${iso3} (no BLOB_TOKEN)`);
+    return null;
+  }
+
+  try {
+    const blob = await put(`acled-data/${iso3}.json`, JSON.stringify(data, null, 2), {
+      access: 'public',
+      token: BLOB_TOKEN,
+    });
+    return blob.url;
+  } catch (error) {
+    console.error(`  Failed to upload ${iso3} to blob: ${error.message}`);
+    return null;
+  }
+}
 
 // Get credentials from environment or prompt user
 let ACLED_ACCESS_TOKEN = process.env.ACLED_ACCESS_TOKEN || '';
@@ -575,21 +641,32 @@ async function fetchAllACLEDData() {
   let savedCountries = 0;
   let mergedCountries = 0;
   let newCountries = 0;
+  let uploadedToBlob = 0;
   const availableCountries = [];
+  const newBlobUrls = {};
 
   for (const [iso3, yearlyData] of Object.entries(cacheData.acledData)) {
     if (Object.keys(yearlyData).length > 0) {
       const countryPath = path.join(cacheDir, `${iso3}.json`);
 
-      // Load existing cache file if it exists
+      // Try to load existing data - first from blob storage, then from local file
       let existingData = null;
-      if (fs.existsSync(countryPath)) {
+
+      // First, try to download from blob storage (for GitHub Actions environment)
+      existingData = await downloadFromBlob(iso3);
+      if (existingData) {
+        console.log(`  Downloaded existing ${iso3} from blob storage`);
+        mergedCountries++;
+      } else if (fs.existsSync(countryPath)) {
+        // Fall back to local file
         try {
           const existingContent = fs.readFileSync(countryPath, 'utf8');
           existingData = JSON.parse(existingContent);
+          console.log(`  Loaded existing ${iso3} from local file`);
           mergedCountries++;
         } catch (error) {
-          console.log(`  Warning: Could not read existing ${iso3}.json, will overwrite`);
+          console.log(`  Warning: Could not read existing ${iso3}.json, will create new`);
+          newCountries++;
         }
       } else {
         newCountries++;
@@ -605,12 +682,20 @@ async function fetchAllACLEDData() {
         version: cacheData.version
       };
 
+      // Save locally
       fs.writeFileSync(countryPath, JSON.stringify(countryData, null, 2));
       availableCountries.push(iso3);
       savedCountries++;
 
+      // Upload to blob storage
+      const blobUrl = await uploadToBlob(iso3, countryData);
+      if (blobUrl) {
+        newBlobUrls[`${iso3}.json`] = blobUrl;
+        uploadedToBlob++;
+      }
+
       if (savedCountries % 10 === 0) {
-        console.log(`  Saved ${savedCountries} countries...`);
+        console.log(`  Saved ${savedCountries} countries (${uploadedToBlob} uploaded to blob)...`);
       }
     }
   }
@@ -618,6 +703,7 @@ async function fetchAllACLEDData() {
   console.log(`\nMerge Summary:`);
   console.log(`  Merged with existing: ${mergedCountries}`);
   console.log(`  New countries: ${newCountries}`);
+  console.log(`  Uploaded to blob: ${uploadedToBlob}`);
 
   // Save metadata
   const metadata = {
@@ -632,6 +718,29 @@ async function fetchAllACLEDData() {
 
   const metadataPath = path.join(cacheDir, 'metadata.json');
   fs.writeFileSync(metadataPath, JSON.stringify(metadata, null, 2));
+
+  // Upload metadata to blob
+  const metadataBlobUrl = await uploadToBlob('metadata', metadata);
+  if (metadataBlobUrl) {
+    newBlobUrls['metadata.json'] = metadataBlobUrl;
+    console.log('Metadata uploaded to blob storage');
+  }
+
+  // Update blob-urls.json with new URLs (merge with existing)
+  if (Object.keys(newBlobUrls).length > 0) {
+    const existingBlobUrls = loadBlobUrls();
+    const updatedBlobUrls = {
+      version: '1.0',
+      lastUpdated: new Date().toISOString(),
+      totalFiles: Object.keys(existingBlobUrls.urls || {}).length,
+      successCount: savedCountries,
+      errorCount: 0,
+      urls: { ...existingBlobUrls.urls, ...newBlobUrls }
+    };
+    updatedBlobUrls.totalFiles = Object.keys(updatedBlobUrls.urls).length;
+    fs.writeFileSync(BLOB_URLS_PATH, JSON.stringify(updatedBlobUrls, null, 2));
+    console.log(`Updated blob-urls.json with ${Object.keys(newBlobUrls).length} new URLs`);
+  }
 
   console.log(`\nSaved ${savedCountries} country files to: ${cacheDir}/`);
   console.log(`Metadata saved: ${metadataPath}`);
