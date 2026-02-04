@@ -119,12 +119,19 @@ const COMMON_COUNTRIES = [
   'SDN', 'AGO', 'ZWE', 'MOZ', 'HTI', 'LBN'
 ];
 
-// Years to fetch (2000 to current year for comprehensive historical data)
+// Determine fetch mode from command line arguments
+// --incremental: Only fetch the previous year (default for scheduled runs)
+// --full: Fetch all years from 2000 to current (for manual backfills)
+const isFullMode = process.argv.includes('--full');
+const isIncrementalMode = process.argv.includes('--incremental') || !isFullMode;
+
 const currentYear = new Date().getFullYear();
-const YEARS = [];
-for (let year = 2000; year <= currentYear; year++) {
-  YEARS.push(year);
-}
+const YEARS = isIncrementalMode
+  ? [currentYear - 1]  // Just the previous year (e.g., 2025 when run in Jan 2026)
+  : Array.from({ length: currentYear - 2000 + 1 }, (_, i) => 2000 + i);
+
+console.log(`Fetch mode: ${isIncrementalMode ? 'INCREMENTAL (previous year only)' : 'FULL (all years)'}`);
+console.log(`Years to fetch: ${YEARS.join(', ')}\n`);
 
 // ISO3 to ACLED country name mapping
 const ISO_TO_ACLED_COUNTRY = {
