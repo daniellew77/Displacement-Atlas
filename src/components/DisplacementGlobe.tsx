@@ -21,6 +21,7 @@ import ErrorScreen from './ErrorScreen';
 import StatisticsPanel from './StatisticsPanel';
 import TerminologyDrawer from './TerminologyDrawer';
 import TutorialDrawer from './TutorialDrawer';
+import ModeToggle, { type ViewMode } from './ModeToggle';
 
 const AVAILABLE_YEARS = getAvailableYears();
 
@@ -142,6 +143,7 @@ const YearSelector = ({
 export default function DisplacementGlobe() {
   const globeRef = useRef<any>();
   const [year, setYear] = useState<number>(GLOBE_CONFIG.year);
+  const [viewMode, setViewMode] = useState<ViewMode>('migration');
   const [tutorialOpen, setTutorialOpen] = useState(true);
   const [terminologyOpen, setTerminologyOpen] = useState(true);
 
@@ -425,7 +427,23 @@ export default function DisplacementGlobe() {
           label="How to Use This Tool"
         />
 
-        <YearSelector year={year} onChange={setYear} loading={loading && hasInitialData} />
+        {/* Center section: Year Selector and Mode Toggle */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '20px',
+        }}>
+          <YearSelector year={year} onChange={setYear} loading={loading && hasInitialData} />
+
+          {/* Divider */}
+          <div style={{
+            width: '1px',
+            height: '24px',
+            background: 'rgba(255, 255, 255, 0.15)',
+          }} />
+
+          <ModeToggle mode={viewMode} onChange={setViewMode} />
+        </div>
 
         <BottomBarToggle
           isOpen={terminologyOpen}
