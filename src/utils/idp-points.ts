@@ -24,27 +24,27 @@ export function calculateIdpRadius(idpCount: number): number {
   // Balanced size range - dramatic but not overwhelming
   const minRadius = 0.25;  // Small but visible
   const maxRadius = 1.8;   // Large but won't cover entire countries
-  
+
   // Use logarithmic scale with exponential boost
   // Typical range: 10,000 to 10,000,000 IDPs
   const minIdp = 10000;
   const maxIdp = 10000000;
-  
+
   if (idpCount < minIdp) return minRadius;
-  
+
   const logMin = Math.log(minIdp);
   const logMax = Math.log(maxIdp);
   const logValue = Math.log(Math.min(idpCount, maxIdp));
-  
+
   // Normalized 0-1
   const normalized = (logValue - logMin) / (logMax - logMin);
-  
+
   // Apply exponential curve for dramatic scaling
   // Power of 1.5 makes larger values grow faster without going overboard
   const exponential = Math.pow(normalized, 1.5);
-  
+
   const radius = minRadius + (exponential * (maxRadius - minRadius));
-  
+
   return radius;
 }
 
@@ -56,16 +56,16 @@ function calculatePolygonCentroid(feature: any): [number, number] | null {
     const coords = feature.geometry.type === 'MultiPolygon'
       ? feature.geometry.coordinates.flat(1)
       : feature.geometry.coordinates;
-    
+
     let sumLat = 0, sumLng = 0, n = 0;
     coords.forEach((ring: number[][]) => {
-      ring.forEach(([lng, lat]) => { 
-        sumLng += lng; 
-        sumLat += lat; 
-        n++; 
+      ring.forEach(([lng, lat]) => {
+        sumLng += lng;
+        sumLat += lat;
+        n++;
       });
     });
-    
+
     return n > 0 ? [sumLat / n, sumLng / n] : null;
   } catch {
     return null;
@@ -81,7 +81,7 @@ export function generateIdpPoints(
   year: number
 ): IdpPoint[] {
   const points: IdpPoint[] = [];
-  
+
   // Create a map of ISO3 to polygon for quick lookup
   const polygonMap = new Map<string, any>();
   for (const polygon of polygons) {
@@ -90,20 +90,20 @@ export function generateIdpPoints(
       polygonMap.set(iso3, polygon);
     }
   }
-  
+
   for (const [iso3, countryData] of iomDataMap.entries()) {
     // Get polygon for this country
     const polygon = polygonMap.get(iso3);
     if (!polygon) continue;
-    
+
     // Calculate centroid
     const centroid = calculatePolygonCentroid(polygon);
     if (!centroid) continue;
-    
+
     // Find data for the requested year
     const yearData = countryData.yearlyData.find(yd => yd.year === year);
     if (!yearData) continue;
-    
+
     // Create point at centroid
     points.push({
       lat: centroid[0],
@@ -116,7 +116,7 @@ export function generateIdpPoints(
       operation: yearData.operation,
     });
   }
-  
+
   return points;
 }
 

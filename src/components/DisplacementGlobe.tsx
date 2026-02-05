@@ -3,6 +3,7 @@ import Globe from 'react-globe.gl';
 import { useGlobalFlows } from '../hooks/useUNHCRData';
 import { usePolygons } from '../hooks/usePolygons';
 import { useIdpPoints } from '../hooks/useIdpPoints';
+import { useConflictData } from '../hooks/useConflictData';
 import { FlowProcessor, getCoordinateMap } from '../lib';
 import {
   polygonCentroid,
@@ -74,71 +75,91 @@ const BottomBarToggle = ({
 const YearSelector = ({
   year,
   onChange,
-  loading
+  loading,
+  availableYears
 }: {
   year: number;
   onChange: (year: number) => void;
   loading: boolean;
-}) => (
-  <div className="flex items-center justify-center gap-4">
-    <span style={{ fontSize: '14px', color: '#ffffff', fontWeight: 600 }}>
-      Viewing Year:
-    </span>
-    <div style={{ position: 'relative', display: 'inline-block' }}>
-      <select
-        value={year}
-        onChange={(e) => onChange(Number(e.target.value))}
+  availableYears: number[];
+}) => {
+  const currentIndex = availableYears.indexOf(year);
+  const canGoBack = currentIndex > 0;
+  const canGoForward = currentIndex < availableYears.length - 1;
+
+  return (
+    <div style={{
+      display: 'flex',
+      alignItems: 'center',
+      gap: '4px',
+    }}>
+      <button
+        onClick={() => canGoForward && onChange(availableYears[currentIndex + 1])}
+        disabled={!canGoForward}
         style={{
-          padding: '8px 36px 8px 16px',
-          borderRadius: '8px',
-          backgroundColor: 'rgba(255, 255, 255, 0.1)',
-          border: '2px solid rgba(0, 188, 212, 0.2)',
+          width: '28px',
+          height: '28px',
+          borderRadius: '6px',
+          border: 'none',
+          background: canGoForward ? 'rgba(255, 255, 255, 0.1)' : 'transparent',
+          color: canGoForward ? '#ffffff' : 'rgba(255, 255, 255, 0.3)',
+          cursor: canGoForward ? 'pointer' : 'default',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
           fontSize: '14px',
-          fontWeight: 600,
-          color: '#ffffff',
-          cursor: 'pointer',
-          WebkitAppearance: 'none',
-          MozAppearance: 'none',
-          appearance: 'none',
-          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)',
           transition: 'all 0.2s ease',
-          outline: 'none'
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.15)';
-          e.currentTarget.style.borderColor = 'rgba(0, 188, 212, 0.4)';
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
-          e.currentTarget.style.borderColor = 'rgba(0, 188, 212, 0.2)';
+        }}>
+        ↓
+      </button>
+
+      <div style={{
+        padding: '4px 12px',
+        borderRadius: '6px',
+        background: 'rgba(0, 0, 0, 0.3)',
+        border: '1px solid rgba(255, 255, 255, 0.15)',
+        fontSize: '14px',
+        fontWeight: 600,
+        color: '#ffffff',
+        minWidth: '50px',
+        textAlign: 'center',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: '6px',
+      }}>
+        {year}
+        {loading && (
+          <div
+            className="animate-spin rounded-full border-2 border-cyan-400 border-t-transparent"
+            style={{ width: '12px', height: '12px' }}
+          />
+        )}
+      </div>
+
+      <button
+        onClick={() => canGoBack && onChange(availableYears[currentIndex - 1])}
+        disabled={!canGoBack}
+        style={{
+          width: '28px',
+          height: '28px',
+          borderRadius: '6px',
+          border: 'none',
+          background: canGoBack ? 'rgba(255, 255, 255, 0.1)' : 'transparent',
+          color: canGoBack ? '#ffffff' : 'rgba(255, 255, 255, 0.3)',
+          cursor: canGoBack ? 'pointer' : 'default',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: '14px',
+          transition: 'all 0.2s ease',
         }}
       >
-        {AVAILABLE_YEARS.map(y => (
-          <option key={y} value={y}>{y}</option>
-        ))}
-      </select>
-      <div style={{
-        position: 'absolute',
-        right: '12px',
-        top: '50%',
-        transform: 'translateY(-50%)',
-        pointerEvents: 'none',
-        fontSize: '12px',
-        color: '#ffffff'
-      }}>
-        ▼
-      </div>
+        ↑
+      </button>
     </div>
-    {loading && (
-      <div className="flex items-center gap-2">
-        <div className="animate-spin rounded-full h-4 w-4 border-2 border-cyan-400 border-t-transparent"></div>
-        <span style={{ fontSize: '13px', color: '#00bcd4', fontWeight: 600 }}>
-          Loading...
-        </span>
-      </div>
-    )}
-  </div>
-);
+  );
+};
 
 export default function DisplacementGlobe() {
   const globeRef = useRef<any>();
@@ -162,6 +183,7 @@ export default function DisplacementGlobe() {
   const coordinates = useMemo(() => getCoordinateMap(), []);
   const polygons = usePolygons();
   const { points: idpPoints } = useIdpPoints(year, polygons);
+  const { heatmapPoints } = useConflictData(year, viewMode === 'conflict');
   const [hasInitialData, setHasInitialData] = useState(false);
 
   useEffect(() => {
@@ -324,7 +346,7 @@ export default function DisplacementGlobe() {
           globeImageUrl="//unpkg.com/three-globe/example/img/earth-blue-marble.jpg"
           backgroundImageUrl="//unpkg.com/three-globe/example/img/night-sky.png"
 
-          arcsData={state.flowDirection === 'incoming' ? incomingOnlyArcs : outgoingOnlyArcs}
+          arcsData={viewMode === 'migration' ? (state.flowDirection === 'incoming' ? incomingOnlyArcs : outgoingOnlyArcs) : []}
           arcStartLat="startLat"
           arcStartLng="startLng"
           arcEndLat="endLat"
@@ -344,15 +366,15 @@ export default function DisplacementGlobe() {
           onGlobeClick={handleGlobeClick}
 
           polygonsData={state.polygons}
-          polygonCapColor={(f: any) => (f === state.hoveredPoly ? 'rgba(0, 188, 212, 0.4)' : 'rgba(255,255,255,0.02)')}
+          polygonCapColor={(f: any) => (f === state.hoveredPoly ? 'rgba(0, 188, 212, 0.4)' : (viewMode === 'conflict' ? 'rgba(255,255,255,0.01)' : 'rgba(255,255,255,0.02)'))}
           polygonSideColor={() => 'rgba(0,0,0,0)'}
-          polygonStrokeColor={(f: any) => (f === state.hoveredPoly ? 'rgba(0, 188, 212, 0.9)' : 'rgba(255,255,255,0.35)')}
+          polygonStrokeColor={(f: any) => (f === state.hoveredPoly ? 'rgba(0, 188, 212, 0.9)' : (viewMode === 'conflict' ? 'rgba(255,255,255,0.8)' : 'rgba(255,255,255,0.35)'))}
           polygonAltitude={(f: any) => (f === state.hoveredPoly ? 0.005 : 0.001)}
           polygonLabel={getPolygonLabel}
           onPolygonHover={handlePolygonHover}
           onPolygonClick={handlePolygonClick}
 
-          pointsData={idpPoints}
+          pointsData={viewMode === 'migration' ? idpPoints : []}
           pointLat="lat"
           pointLng="lng"
           pointRadius={getIdpPointRadius}
@@ -361,6 +383,13 @@ export default function DisplacementGlobe() {
           pointAltitude={0.01}
           pointResolution={12}
           onPointClick={handleIdpPointClick}
+
+          heatmapsData={viewMode === 'conflict' ? [heatmapPoints] : []}
+          heatmapPointLat="lat"
+          heatmapPointLng="lng"
+          heatmapPointWeight="weight"
+          heatmapTopAltitude={0.08}
+          heatmapBandwidth={1.6}
         />
       </div>
 
@@ -427,22 +456,20 @@ export default function DisplacementGlobe() {
           label="How to Use This Tool"
         />
 
-        {/* Center section: Year Selector and Mode Toggle */}
+        {/* Center section: Mode Toggle (hero) and Year Selector */}
         <div style={{
           display: 'flex',
           alignItems: 'center',
-          gap: '20px',
+          gap: '16px',
         }}>
-          <YearSelector year={year} onChange={setYear} loading={loading && hasInitialData} />
-
-          {/* Divider */}
-          <div style={{
-            width: '1px',
-            height: '24px',
-            background: 'rgba(255, 255, 255, 0.15)',
-          }} />
-
           <ModeToggle mode={viewMode} onChange={setViewMode} />
+
+          <YearSelector
+            year={year}
+            onChange={setYear}
+            loading={loading && hasInitialData}
+            availableYears={AVAILABLE_YEARS}
+          />
         </div>
 
         <BottomBarToggle
