@@ -1,8 +1,8 @@
 {
   "version": "1.0",
-  "lastUpdated": "2025-10-29T22:29:56.966Z",
+  "lastUpdated": "2026-02-04T07:40:57.176Z",
   "totalFiles": 56,
-  "successCount": 56,
+  "successCount": 55,
   "errorCount": 0,
   "urls": {
     "AFG.json": "https://k3pgq7sxngmcccma.public.blob.vercel-storage.com/acled-data/AFG.json",
